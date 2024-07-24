@@ -14,4 +14,9 @@ import java.util.List;
 
 public class Commercial extends Utilisateur {
 
+    @OneToMany (mappedBy = "commercial", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Lead> leads;
+
+    @OneToMany(mappedBy = "commercial", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RendezVous> rendezVousList;
 }

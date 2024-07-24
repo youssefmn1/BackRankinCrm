@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,10 +20,10 @@ public class HistoriqueInteraction {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-
-    private String typeinteraction;
+    private String typeInteraction;
 
     private String details;
-   /* @ManyToOne
-    private String interaction;*/
+
+    @OneToMany(mappedBy = "historiqueInteraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Interaction> interactions;
 }

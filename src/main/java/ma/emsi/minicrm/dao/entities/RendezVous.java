@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +25,12 @@ public class RendezVous {
     private Time heure;
 
     private String lieu;
+
+    @OneToOne
+    @JoinColumn(name = "lead_id")
+    private Lead lead;
+
+    @ManyToOne
+    @JoinColumn(name = "commercial_id")
+    private Commercial commercial;
 }

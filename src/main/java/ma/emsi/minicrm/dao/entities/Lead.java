@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
@@ -23,6 +24,15 @@ public class Lead {
     private String telephone;
     private String source;
     private String note;
-//    private Commercial commercialAssigne;
 
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Interaction> interactions;
+
+    @ManyToOne
+    @JoinColumn(name = "commercial_id")
+    private Commercial commercial;
+
+
+    @OneToOne(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RendezVous rendezVous;
 }
