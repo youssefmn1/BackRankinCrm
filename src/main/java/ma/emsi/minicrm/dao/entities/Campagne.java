@@ -21,5 +21,4 @@ public class Campagne {
     private Date dateDebut;
     private Date dateFin;
     private Float budget;
-
 }
