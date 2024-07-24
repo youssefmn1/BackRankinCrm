@@ -1,0 +1,1 @@
+package ma.emsi.minicrm.dao.entities;
