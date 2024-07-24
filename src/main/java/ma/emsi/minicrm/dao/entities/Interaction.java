@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Time;
 import java.util.Date;
 
 @Data
@@ -19,15 +20,8 @@ public class Interaction {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    private String typeInteraction;
+    private String typeinteraction;
 
     private String details;
 
-    @ManyToOne
-    @JoinColumn(name = "historique_interaction_id")
-    private HistoriqueInteraction historiqueInteraction;
-
-    @ManyToOne
-    @JoinColumn(name = "lead_id")
-    private Lead lead;
 }
