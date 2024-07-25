@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="index.html">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Leads</title>
+</head>
+<body>
+<div layout:fragment="content" class="p-2">
+    <div class="card">
+        <div class="card-header">List of Leads</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/leads}">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Search by name" name="keyword" th:value="${keyword}">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Telephone</th>
+                    <th>Source</th>
+                    <th>Note</th>
+                    <th>Commercial</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="lead : ${leads}">
+                    <td th:text="${lead.id}"></td>
+                    <td th:text="${lead.nom}"></td>
+                    <td th:text="${lead.prenom}"></td>
+                    <td th:text="${lead.email}"></td>
+                    <td th:text="${lead.adresse}"></td>
+                    <td th:text="${lead.telephone}"></td>
+                    <td th:text="${lead.source}"></td>
+                    <td th:text="${lead.note}"></td>
+                    <td th:text="${lead.commercial != null ? lead.commercial.nom : 'No commercial'}"></td>
+                    <td>
+                        <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-primary">Edit</a>
+                        <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/leads/delete/{id}(id=${lead.id})}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
