@@ -27,6 +27,7 @@
                     <th>Telephone</th>
                     <th>Source</th>
                     <th>Note</th>
+                    <th>Statut</th>
                     <th>Commercial</th>
                     <th>Actions</th>
                 </tr>
@@ -41,6 +42,7 @@
                     <td th:text="${lead.telephone}"></td>
                     <td th:text="${lead.source}"></td>
                     <td th:text="${lead.note}"></td>
+                    <td th:text="${lead.statut}"></td>
                     <td th:text="${lead.commercial != null ? lead.commercial.nom : 'No commercial'}"></td>
                     <td>
                         <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-primary">Edit</a>

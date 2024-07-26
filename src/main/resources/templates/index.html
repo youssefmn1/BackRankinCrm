@@ -60,180 +60,25 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <!-- Affichage pour CHEF_PROJET -->
-                    <div th:if="${session.role == 'CHEF_PROJET'}">
-                        <div class="sb-sidenav-menu-heading">Gestion</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePatients" aria-expanded="false" aria-controls="collapsePatients">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Employees
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePatients" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPatients">
-                                <a class="nav-link" th:href="@{/formEmploye}">New</a>
-                                <a class="nav-link" th:href="@{/indexEmploye}">List</a>
-                            </nav>
-                        </div>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseEquipes" aria-expanded="false" aria-controls="collapseEquipes">
+                    <!-- Section Leads -->
+                    <div>
+                        <div class="sb-sidenav-menu-heading">Leads</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLeads" aria-expanded="false" aria-controls="collapseLeads">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Equipes
+                            Leads
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseEquipes" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
+                        <div class="collapse" id="collapseLeads" aria-labelledby="headingLeads" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formEquipe}">New</a>
-                                <a class="nav-link" th:href="@{/indexEquipe}">List</a>
+                                <a class="nav-link" th:href="@{/leads}">List</a>
                             </nav>
-                        </div>
-
-                        <div class="sb-sidenav-menu-heading">Addons</div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProjets" aria-expanded="false" aria-controls="collapseProjets">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Projets
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseProjets" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formProjet}">New</a>
-                                <a class="nav-link" th:href="@{/indexProjet}">List</a>
-                            </nav>
-                        </div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTaches" aria-expanded="false" aria-controls="collapseTaches">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Taches
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseTaches" aria-labelledby="headingFive" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formTache}">New</a>
-                                <a class="nav-link" th:href="@{/indexTache}">List</a>
-                            </nav>
-                        </div>
-
-                        <!-- Section Réunions pour CHEF_PROJET -->
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReunionsChef" aria-expanded="false" aria-controls="collapseReunionsChef">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
-                            Réunions
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseReunionsChef" aria-labelledby="headingSix" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formReunion}">New</a>
-                                <a class="nav-link" th:href="@{/indexReunion}">List</a>
+                                <a class="nav-link" th:href="@{/leads/new}">Add</a>
                             </nav>
                         </div>
                     </div>
 
-                    <!-- Affichage pour EMPLOYE -->
-                    <div th:if="${session.role == 'EMPLOYE'}">
-                        <div class="sb-sidenav-menu-heading">Tâches</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTaches" aria-expanded="false" aria-controls="collapseTaches">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Tâches
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseTaches" aria-labelledby="headingTaches" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/indexTache}">List</a>
-                            </nav>
-                        </div>
-
-                        <!-- Section Réunions pour EMPLOYE -->
-                        <div class="sb-sidenav-menu-heading">Réunions</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReunionsEmploye" aria-expanded="false" aria-controls="collapseReunionsEmploye">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
-                            Réunions
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseReunionsEmploye" aria-labelledby="headingReunionsEmploye" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/indexReunion}">List</a>
-                            </nav>
-                        </div>
-                    </div>
-
-                    <!-- Affichage pour l'absence de rôle défini (null) -->
-                    <div th:unless="${session.role}">
-                        <div class="sb-sidenav-menu-heading">Gestion</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMeds" aria-expanded="false" aria-controls="collapseMeds">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Chef Projet
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseMeds" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formChefProjet}">New</a>
-                                <a class="nav-link" th:href="@{/indexChefProjet}">List</a>
-                            </nav>
-                        </div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePatients" aria-expanded="false" aria-controls="collapsePatients">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Employees
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePatients" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPatients">
-                                <a class="nav-link" th:href="@{/formEmploye}">New</a>
-                                <a class="nav-link" th:href="@{/indexEmploye}">List</a>
-                            </nav>
-                        </div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseEquipes" aria-expanded="false" aria-controls="collapseEquipes">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Equipes
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseEquipes" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formEquipe}">New</a>
-                                <a class="nav-link" th:href="@{/indexEquipe}">List</a>
-                            </nav>
-                        </div>
-
-                        <div class="sb-sidenav-menu-heading">Addons</div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProjets" aria-expanded="false" aria-controls="collapseProjets">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Projets
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseProjets" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formProjet}">New</a>
-                                <a class="nav-link" th:href="@{/indexProjet}">List</a>
-                            </nav>
-                        </div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTaches" aria-expanded="false" aria-controls="collapseTaches">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Taches
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseTaches" aria-labelledby="headingFive" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formTache}">New</a>
-                                <a class="nav-link" th:href="@{/indexTache}">List</a>
-                            </nav>
-                        </div>
-
-                        <!-- Section Réunions pour l'absence de rôle défini -->
-                        <div class="sb-sidenav-menu-heading">Réunions</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReunions" aria-expanded="false" aria-controls="collapseReunions">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
-                            Réunions
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseReunions" aria-labelledby="headingReunions" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/formReunion}">New</a>
-                                <a class="nav-link" th:href="@{/indexReunion}">List</a>
-                            </nav>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="sb-sidenav-footer">

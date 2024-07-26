@@ -41,6 +41,7 @@ public class LeadService {
             lead.setTelephone(leadDetails.getTelephone());
             lead.setSource(leadDetails.getSource());
             lead.setNote(leadDetails.getNote());
+            lead.setStatut(leadDetails.getStatut());
             return leadRepository.save(lead);
         } else {
             return null;

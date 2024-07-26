@@ -26,9 +26,12 @@ public class LeadController {
     // Create a new lead
     @PostMapping
     public String createLead(@ModelAttribute Lead lead) {
+        lead.setRendezVous(null);
+        lead.setCommercial(null);
         leadService.createLead(lead);
         return "redirect:/leads";  // Redirect to the list of leads
     }
+
 
     // Retrieve a lead by its ID
     @GetMapping("/{id}")
