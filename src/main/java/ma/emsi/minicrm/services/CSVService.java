@@ -32,6 +32,7 @@ public class CSVService {
                 lead.setTelephone(record[4]);
                 lead.setSource(record[5]);
                 lead.setNote(record[6]);
+                lead.setStatut(record[7]);
                 leads.add(lead);
             }
         }
