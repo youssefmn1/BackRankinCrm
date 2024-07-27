@@ -3,6 +3,9 @@ package ma.emsi.minicrm.services;
 import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.repositories.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,11 @@ public class LeadService {
 
     @Autowired
     private LeadRepository leadRepository;
+
+    public Page<Lead> findPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return leadRepository.findAll(pageable);
+    }
 
     // Create a new lead
     public Lead createLead(Lead lead) {

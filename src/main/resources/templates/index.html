@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,39 +11,151 @@
     <link href="../css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <style>
+        /* Custom styles for the sidebar */
         .sb-topnav.navbar, .sb-sidenav-footer {
-            background-color: #5b3d07 !important;
+            background-color: #ffffff !important;
         }
 
         .sb-sidenav-dark {
-            background-color: #5b3d07 !important;
+            background: linear-gradient(135deg, #6c27c7 0%, #9b42d9 100%) !important;
+            color: #ffffff !important;
         }
 
         .sb-sidenav-dark .sb-sidenav-menu .nav-link {
             color: #ffffff !important;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
-            color: #a6730f !important;
+            background-color: #ffffff !important;
+            color: #6c27c7 !important;
+        }
+
+        .sb-sidenav-dark .sb-sidenav-menu-heading {
+            color: #ffffff !important;
+            padding-left: 20px;
+            margin-top: 20px;
+        }
+
+        .sb-sidenav-dark .sb-sidenav-footer {
+            color: #ffffff !important;
+            background-color: #9b42d9 !important;
+        }
+
+        .sb-sidenav-menu {
+            padding: 20px 0;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #6c27c7;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9b42d9;
         }
 
         footer a {
-            color: #5b3d07 !important;
+            color: #ee4e4e !important;
             text-decoration: none;
             transition: color 0.3s;
         }
 
         footer a:hover {
-            color: #a6730f !important;
+            color: #000000 !important;
+        }
+
+        .navbar-brand img {
+            height: 50px;
+        }
+
+        .sidebar-collapsed .sb-sidenav {
+            width: 80px !important;
+        }
+
+        .sidebar-collapsed .sb-sidenav .sb-sidenav-menu .nav-link {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .sidebar-collapsed .sb-sidenav .sb-sidenav-menu .nav-link i {
+            margin: 0;
+            display: block;
+            color: #ffffff !important;
+        }
+
+        .sidebar-collapsed .sb-sidenav .sb-sidenav-menu .nav-link svg {
+            margin: 0;
+            display: block;
+            fill: #ffffff !important;
+        }
+
+        .sidebar-collapsed .sb-sidenav .sb-sidenav-menu .nav-link-text {
+            display: none;
+        }
+
+        .sidebar-collapsed .sb-sidenav .sb-sidenav-menu .sb-sidenav-menu-heading {
+            display: none;
+        }
+
+        .sidebar-collapsed .sb-sidenav .sb-sidenav-footer {
+            text-align: center;
+        }
+
+        .sidebar-collapsed .sb-sidenav-footer .small {
+            display: none;
+        }
+
+        .sidebar-collapsed .sb-sidenav-footer span {
+            display: none;
+        }
+
+        .sb-sidenav .nav-link .sb-nav-link-icon {
+            margin-right: 10px;
+        }
+
+        .sb-sidenav .nav-link {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Additional styles for SVG icons */
+        .sb-sidenav .nav-link .sb-nav-link-icon svg {
+            width: 1.2rem; /* Adjust size as needed */
+            height: 1.2rem; /* Adjust size as needed */
+            fill: #ffffff; /* Ensures the icons are white */
+        }
+
+        .sb-sidenav .nav-link:hover .sb-nav-link-icon svg {
+            fill: #ffffff; /* Change color on hover */
+        }
+
+        /* Styles for the toggle button */
+        .sb-topnav #sidebarToggle {
+            margin-left: 0 !important;
+            color: #984eee;
+        }
+
+        .sb-topnav #sidebarToggle:hover {
+            color: #984eee;
         }
     </style>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-grenat bg-dark">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="#">GSEMP</a>
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="#">
+        <img src="/img/Rankinlogo.png" alt="Rankin Digital Logo">
+    </a>
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
         <li class="nav-item dropdown">
@@ -60,38 +171,21 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-
-                    <!-- Section Leads -->
-                    <div>
-                        <div class="sb-sidenav-menu-heading">Leads</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLeads" aria-expanded="false" aria-controls="collapseLeads">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Leads
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLeads" aria-labelledby="headingLeads" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/leads}">List</a>
-                            </nav>
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" th:href="@{/leads/new}">Add</a>
-                            </nav>
+                    <a class="nav-link" th:href="@{/leads}">
+                        <div class="sb-nav-link-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
+                                <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
                         </div>
-                    </div>
-
+                        <span class="nav-link-text">Leads list</span>
+                    </a>
                 </div>
             </div>
-            <div class="sb-sidenav-footer">
-                <div class="small">Connecté en tant que :</div>
-                <span th:text="${session.username}"></span>
-            </div>
+
         </nav>
     </div>
     <div id="layoutSidenav_content">
-        <main>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4" style="font-weight: bold; color: black;">GSEMP</h1>
-            </div>
+        <main class="container-fluid">
             <div layout:fragment="content"></div>
         </main>
         <footer class="py-4 bg-light mt-auto">
@@ -115,5 +209,12 @@
 <script src="../static/assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="../static/js/datatables-simple-demo.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-collapsed');
+        });
+    });
+</script>
 </body>
 </html>

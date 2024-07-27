@@ -3,6 +3,7 @@ package ma.emsi.minicrm.web;
 import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.services.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
