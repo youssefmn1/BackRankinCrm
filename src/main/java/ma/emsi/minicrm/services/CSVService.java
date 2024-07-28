@@ -24,6 +24,9 @@ public class CSVService {
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
             List<String[]> records = reader.readAll();
             for (String[] record : records) {
+                if (record.length < 8) { // Vérification du nombre de colonnes
+                    throw new CsvException("Invalid CSV format. Each row must have 8 columns.");
+                }
                 Lead lead = new Lead();
                 lead.setNom(record[0]);
                 lead.setPrenom(record[1]);

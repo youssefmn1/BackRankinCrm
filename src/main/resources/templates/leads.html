@@ -135,6 +135,12 @@
                 margin-bottom: 0.5rem;
             }
         }
+        /* Your existing styles here */
+         .custom-alert {
+             padding: 15px;  /* Increase padding */
+             margin-bottom: 20px;  /* Increase margin bottom */
+             font-size: 1rem;  /* Increase font size */
+         }
     </style>
 </head>
 <body>
@@ -147,8 +153,8 @@
             </div>
         </div>
         <div class="card-body">
-            <!-- Display flash messages -->
-            <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+                <!-- Display flash messages -->
+                <div class="custom-alert" th:if="${message}" th:classappend="${alertClass}" th:text="${message}"></div>
 
             <div class="mb-4">
                 <form method="post" th:action="@{/api/csv/import}" enctype="multipart/form-data" class="form-inline">
