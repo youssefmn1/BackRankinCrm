@@ -135,12 +135,13 @@
                 margin-bottom: 0.5rem;
             }
         }
+
         /* Your existing styles here */
-         .custom-alert {
-             padding: 15px;  /* Increase padding */
-             margin-bottom: 20px;  /* Increase margin bottom */
-             font-size: 1rem;  /* Increase font size */
-         }
+        .custom-alert {
+            padding: 15px;  /* Increase padding */
+            margin-bottom: 20px;  /* Increase margin bottom */
+            font-size: 1rem;  /* Increase font size */
+        }
     </style>
 </head>
 <body>
@@ -153,8 +154,8 @@
             </div>
         </div>
         <div class="card-body">
-                <!-- Display flash messages -->
-                <div class="custom-alert" th:if="${message}" th:classappend="${alertClass}" th:text="${message}"></div>
+            <!-- Display flash messages -->
+            <div class="custom-alert" th:if="${message}" th:classappend="${alertClass}" th:text="${message}"></div>
 
             <div class="mb-4">
                 <form method="post" th:action="@{/api/csv/import}" enctype="multipart/form-data" class="form-inline">
@@ -173,41 +174,46 @@
                     </div>
                 </div>
             </form>
-            <div class="table-container">
-                <table class="table table-hover table-bordered">
-                    <thead class="thead-light">
-                    <tr>
-                        <th>Id</th>
-                        <th>Nom</th>
-                        <th>Prenom</th>
-                        <th>Email</th>
-                        <th>Telephone</th>
-                        <th>Source</th>
-                        <th>Note</th>
-                        <th>Statut</th>
-                        <th>Commercial</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="lead : ${leads}">
-                        <td th:text="${lead.id}"></td>
-                        <td th:text="${lead.nom}"></td>
-                        <td th:text="${lead.prenom}"></td>
-                        <td th:text="${lead.email}"></td>
-                        <td th:text="${lead.telephone}"></td>
-                        <td th:text="${lead.source}"></td>
-                        <td th:text="${lead.note}"></td>
-                        <td th:text="${lead.statut}"></td>
-                        <td th:text="${lead.commercial != null ? lead.commercial.nom : 'No commercial'}"></td>
-                        <td>
-                            <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-sm btn-primary">Edit</a>
-                            <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/leads/delete/{id}(id=${lead.id})}" class="btn btn-sm btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <form method="post" th:action="@{/leads/deleteSelected}" id="deleteForm">
+                <div class="table-container">
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-light">
+                        <tr>
+                            <th><input type="checkbox" id="select-all"></th>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Email</th>
+                            <th>Telephone</th>
+                            <th>Source</th>
+                            <th>Note</th>
+                            <th>Statut</th>
+                            <th>Commercial</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lead : ${leads}">
+                            <td><input type="checkbox" class="select-lead" name="selectedLeads" th:value="${lead.id}"></td>
+                            <td th:text="${lead.id}"></td>
+                            <td th:text="${lead.nom}"></td>
+                            <td th:text="${lead.prenom}"></td>
+                            <td th:text="${lead.email}"></td>
+                            <td th:text="${lead.telephone}"></td>
+                            <td th:text="${lead.source}"></td>
+                            <td th:text="${lead.note}"></td>
+                            <td th:text="${lead.statut}"></td>
+                            <td th:text="${lead.commercial != null ? lead.commercial.nom : 'No commercial'}"></td>
+                            <td>
+                                <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-sm btn-primary">Edit</a>
+                                <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/leads/delete/{id}(id=${lead.id})}" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button onclick="return confirm('Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?')" type="submit" class="btn btn-danger mt-3">Delete Selected</button>
+            </form>
         </div>
     </div>
 </div>
@@ -242,5 +248,19 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    // Select/Deselect all checkboxes
+    document.getElementById('select-all').onclick = function() {
+        var checkboxes = document.querySelectorAll('.select-lead');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+
+    // Submit the form when the delete button is clicked
+    document.getElementById('deleteForm').onsubmit = function() {
+        return confirm('Are you sure you want to delete the selected leads?');
+    }
+</script>
 </body>
 </html>

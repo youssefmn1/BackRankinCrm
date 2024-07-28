@@ -71,4 +71,12 @@ public class LeadController {
         leadService.deleteLead(id);
         return "redirect:/leads";  // Redirect to the list of leads
     }
+    // Delete selected leads
+    @PostMapping("/deleteSelected")
+    public String deleteSelectedLeads(@RequestParam("selectedLeads") List<Integer> selectedLeadIds) {
+        for (Integer leadId : selectedLeadIds) {
+            leadService.deleteLead(leadId);
+        }
+        return "redirect:/leads";  // Redirect to the list of leads
+    }
 }
