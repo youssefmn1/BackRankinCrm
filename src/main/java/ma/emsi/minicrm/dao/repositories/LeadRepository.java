@@ -6,8 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 @Transactional
 public interface LeadRepository extends JpaRepository<Lead,Integer> {
-    Page<Lead> findByNomContains(String keyword, Pageable pageable); // pageable sert pour faire la pagination
+     Page<Lead> findByNomContains(String keyword, Pageable pageable); // pageable sert pour faire la pagination
 
 }

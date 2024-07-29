@@ -44,9 +44,15 @@ public class LeadController {
 
     // Retrieve all leads
     @GetMapping
-    public String getAllLeads(Model model) {
-        List<Lead> leads = leadService.getAllLeads();
-        model.addAttribute("leads", leads);
+    public String getAllLeads(Model model,
+                              @RequestParam(name = "page",defaultValue = "0") int page,
+                              @RequestParam(name = "size",defaultValue = "10") int size,
+                              @RequestParam(name = "keyword",defaultValue = "") String kw) {
+        Page<Lead> Pageleads = leadService.findPaginated(page,size,kw);
+        model.addAttribute("leads", Pageleads.getContent());
+        model.addAttribute("pages",new int[Pageleads.getTotalPages()]);// collecter un tableau avec une size de nombre de page
+        model.addAttribute("currentPage",page);
+        model.addAttribute("keyword",kw);
         return "leads";  // Returns the name of the HTML template
     }
 

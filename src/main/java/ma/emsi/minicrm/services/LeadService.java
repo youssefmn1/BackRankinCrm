@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,11 @@ public class LeadService {
     @Autowired
     private LeadRepository leadRepository;
 
-    public Page<Lead> findPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return leadRepository.findAll(pageable);
+    public Page<Lead> findPaginated(@RequestParam(name = "page",defaultValue = "0") int page,
+                                    @RequestParam(name = "size",defaultValue = "5") int size,
+                                    @RequestParam(name = "keyword",defaultValue = "") String kw) {
+
+        return leadRepository.findByNomContains(kw, PageRequest.of(page,size));
     }
 
     // Create a new lead

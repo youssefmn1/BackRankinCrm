@@ -212,7 +212,17 @@
                         </tbody>
                     </table>
                 </div>
-                <button onclick="return confirm('Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?')" type="submit" class="btn btn-danger mt-3">Delete Selected</button>
+                <div>
+                    <button onclick="return confirm('Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?')" type="submit" class="btn btn-danger mt-3">Delete Selected</button>
+                    <ul class="nav nav-pills d-flex justify-content-center">
+                        <li th:each="page,status:${pages}">
+                            <a th:href="@{/leads(page=${status.index},keyword=${keyword})}"
+                               th:class="${currentPage==status.index?'btn btn-custom-blue ms-1':'btn btn-outline-primary ms-1'}"
+                               th:text="${1+status.index}"
+                               class="btn btn-light"></a>
+                        </li>
+                    </ul>
+                </div>
             </form>
         </div>
     </div>
