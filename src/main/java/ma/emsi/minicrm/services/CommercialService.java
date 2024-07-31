@@ -1,6 +1,7 @@
 package ma.emsi.minicrm.services;
 
 import ma.emsi.minicrm.dao.entities.Commercial;
+import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.repositories.CommercialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,7 @@ public class CommercialService {
             commercial.setNom(commercialDetails.getNom());
             commercial.setPrenom(commercialDetails.getPrenom());
             commercial.setEmail(commercialDetails.getEmail());
+
             return commercialRepository.save(commercial);
         } else {
             return null;
@@ -61,5 +63,8 @@ public class CommercialService {
         } else {
             return false;
         }
+    }
+    public List<Commercial> findAll() {
+        return commercialRepository.findAll();
     }
 }

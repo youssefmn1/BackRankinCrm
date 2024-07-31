@@ -77,6 +77,13 @@
                                 <label class="form-label" for="note">Note</label>
                                 <textarea th:field="*{note}" id="note" class="form-control" rows="3"></textarea>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="commercial">Commercial</label>
+                                <select th:field="*{commercial}" id="commercial" class="form-control">
+                                    <option th:each="commercial : ${commercials}" th:value="${commercial.id}" th:text="${commercial.nom} + ' ' + ${commercial.prenom}"></option>
+                                </select>
+                            </div>
+
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
                         </form>
                     </div>

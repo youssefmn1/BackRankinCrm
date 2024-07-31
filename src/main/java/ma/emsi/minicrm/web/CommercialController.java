@@ -1,8 +1,10 @@
 package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Commercial;
+import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.entities.Role;
 import ma.emsi.minicrm.services.CommercialService;
+import ma.emsi.minicrm.services.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ public class CommercialController {
 
     @Autowired
     private CommercialService commercialService;
+    @Autowired
+    private LeadService leadService;
 
     // Show the form to create a new commercial
     @GetMapping("/new")

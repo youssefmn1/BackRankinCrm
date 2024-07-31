@@ -12,4 +12,6 @@ import java.util.List;
 public interface LeadRepository extends JpaRepository<Lead,Integer> {
      Page<Lead> findByNomContains(String keyword, Pageable pageable); // pageable sert pour faire la pagination
 
+     // Méthode pour trouver les leads par l'ID du commercial
+     List<Lead> findByCommercialId(Integer commercialId);
 }

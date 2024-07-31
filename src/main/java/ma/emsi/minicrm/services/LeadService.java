@@ -69,5 +69,13 @@ public class LeadService {
             return false;
         }
     }
+
+    public List<Lead> findAll() {
+        return leadRepository.findAll();
+    }
+    // Méthode pour trouver les leads par l'ID du commercial
+    public List<Lead> getLeadsByCommercialId(Integer commercialId) {
+        return leadRepository.findByCommercialId(commercialId);
+    }
 }
 

@@ -175,7 +175,16 @@
                             <td th:text="${commercial.nom}"></td>
                             <td th:text="${commercial.prenom}"></td>
                             <td th:text="${commercial.email}"></td>
-                            <td th:text="${#lists.isEmpty(commercial.leads) ? 'no leads' : #lists.size(commercial.leads)}"></td>
+                            <td>
+                                <span th:if="${#lists.size(commercial.leads) > 0}">
+                                    <a th:href="@{'/leads/commercial/' + ${commercial.id}}">
+                                        Détails
+                                    </a>
+                                </span>
+                                <span th:if="${#lists.size(commercial.leads) == 0}">
+                                    Pas de leads
+                                </span>
+                            </td>
                             <td th:text="${#lists.isEmpty(commercial.rendezVousList) ? 'no rendezvous' : #lists.size(commercial.rendezVousList)}"></td>
                             <td>
                                 <a th:href="@{/commercials/edit/{id}(id=${commercial.id})}" class="btn btn-sm btn-primary">Edit</a>

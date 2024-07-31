@@ -42,7 +42,7 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">Éditer Commercial</div>
                 <div class="card-body">
-                    <form th:action="@{/commercials/{id}(id=${commercial.id})}" th:method="post" th:object="${commercial}">
+                    <form th:action="@{/commercials/edit/{id}(id=${commercial.id})}" th:method="post" th:object="${commercial}">
                         <div class="mb-3">
                             <label class="form-label">Nom</label>
                             <input type="text" th:field="*{nom}" class="form-control" required>
@@ -55,6 +55,13 @@
                             <label class="form-label">Email</label>
                             <input type="email" th:field="*{email}" class="form-control" required>
                         </div>
+                        <!--
+                        <div class="mb-3">
+                            <label class="form-label">Lead(s)</label>
+                            <select th:field="*{leads}" class="form-select" multiple>
+                                <option th:each="lead : ${leads}" th:value="${lead.id}" th:text="${lead.nom}"></option>
+                            </select>
+                        </div>-->
 
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
                     </form>
