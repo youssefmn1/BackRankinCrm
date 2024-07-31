@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="index.html">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Commercials</title>
+    <!-- Include Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #6c27c7; /* Your project's primary color */
+            --secondary-color: #9b42d9; /* Your project's secondary color */
+            --background-color: #f8f9fa; /* Background color */
+            --text-color: #ffffff; /* Text color for buttons */
+            --border-radius: 0.375rem; /* Border radius for elements */
+        }
+
+        body {
+            background-color: var(--background-color);
+        }
+
+        .card {
+            margin-top: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+            border-top: none;
+        }
+
+        .table th {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .header-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h5 {
+            margin: 0;
+        }
+
+        .form-inline .form-group {
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-outline-secondary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            border-radius: var(--border-radius);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+        }
+
+        .btn-sm.btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-sm.btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-sm:hover {
+            opacity: 0.8;
+        }
+
+        .input-group .form-control {
+            border-radius: var(--border-radius);
+        }
+
+        .input-group .input-group-append .btn {
+            border-radius: var(--border-radius);
+        }
+
+        @media (max-width: 768px) {
+            .header-title h5 {
+                font-size: 1rem;
+            }
+
+            .header-title a {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .form-inline .form-group, .form-inline button {
+                margin-bottom: 0.5rem;
+                width: 100%;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .input-group .form-control, .input-group .input-group-append {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <div class="header-title">
+                <h5>List of Commercials</h5>
+                <a href="/commercials/new" class="btn btn-primary">Add New Commercial</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="get" th:action="@{/commercials}">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Search by name" name="keyword" th:value="${keyword}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+            <form method="post" th:action="@{/commercials/deleteSelected}" id="deleteForm">
+                <div class="table-container">
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Email</th>
+                            <th>Leads</th>
+                            <th>RendezVous</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="commercial : ${commercials}">
+                            <td><label>
+                                <input type="checkbox" class="select-commercial" name="selectedCommercials" th:value="${commercial.id}">
+                            </label></td>
+                            <td th:text="${commercial.id}"></td>
+                            <td th:text="${commercial.nom}"></td>
+                            <td th:text="${commercial.prenom}"></td>
+                            <td th:text="${commercial.email}"></td>
+                            <td th:text="${#lists.isEmpty(commercial.leads) ? 'no leads' : #lists.size(commercial.leads)}"></td>
+                            <td th:text="${#lists.isEmpty(commercial.rendezVousList) ? 'no rendezvous' : #lists.size(commercial.rendezVousList)}"></td>
+                            <td>
+                                <a th:href="@{/commercials/edit/{id}(id=${commercial.id})}" class="btn btn-sm btn-primary">Edit</a>
+                                <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/commercials/delete/{id}(id=${commercial.id})}" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button onclick="return confirm('Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?')" type="submit" class="btn btn-danger mt-3">Delete Selected</button>
+                    <ul class="nav nav-pills d-flex justify-content-center">
+                        <li th:each="page,status:${pages}">
+                            <a th:href="@{/commercials(page=${status.index},keyword=${keyword})}"
+                               th:class="${currentPage==status.index?'btn btn-custom-blue ms-1':'btn btn-outline-primary ms-1'}"
+                               th:text="${1+status.index}"
+                               class="btn btn-light"></a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS and dependencies (jQuery and Popper.js) -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    // Select/Deselect all checkboxes
+    document.getElementById('select-all').onclick = function() {
+        var checkboxes = document.querySelectorAll('.select-commercial');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+
+    // Submit the form when the delete button is clicked
+    document.getElementById('deleteForm').onsubmit = function() {
+        return confirm('Are you sure you want to delete the selected commercials?');
+    }
+</script>
+</body>
+</html>
