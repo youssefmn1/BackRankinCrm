@@ -3,6 +3,7 @@ package ma.emsi.minicrm.services;
 import ma.emsi.minicrm.dao.entities.Commercial;
 import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.repositories.CommercialRepository;
+import ma.emsi.minicrm.dao.repositories.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class CommercialService {
 
     @Autowired
     private CommercialRepository commercialRepository;
 
-    public Page<Commercial> findPaginated(@RequestParam(name = "page", defaultValue = "0") int page,
-                                          @RequestParam(name = "size", defaultValue = "5") int size,
-                                          @RequestParam(name = "keyword", defaultValue = "") String kw) {
+    @Autowired
+    private LeadRepository leadRepository;  // Ensure to inject LeadRepository to handle leads
+
+    public Page<Commercial> findPaginated(int page, int size, String kw) {
         return commercialRepository.findByNomContains(kw, PageRequest.of(page, size));
     }
 
@@ -58,12 +59,18 @@ public class CommercialService {
     public boolean deleteCommercial(Integer id) {
         Commercial commercial = getCommercialById(id);
         if (commercial != null) {
+            // Detach leads from this commercial
+            for (Lead lead : commercial.getLeads()) {
+                lead.setCommercial(null);
+                leadRepository.save(lead);  // Update the lead to remove the association
+            }
             commercialRepository.delete(commercial);
             return true;
         } else {
             return false;
         }
     }
+
     public List<Commercial> findAll() {
         return commercialRepository.findAll();
     }
