@@ -53,10 +53,12 @@ public class LeadController {
                               @RequestParam(name = "size",defaultValue = "10") int size,
                               @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Page<Lead> Pageleads = leadService.findPaginated(page,size,kw);
+        List<Commercial> commercials = commercialRepository.findAll();
         model.addAttribute("leads", Pageleads.getContent());
         model.addAttribute("pages",new int[Pageleads.getTotalPages()]);// collecter un tableau avec une size de nombre de page
         model.addAttribute("currentPage",page);
         model.addAttribute("keyword",kw);
+        model.addAttribute("commercials", commercials);
         return "leads";  // Returns the name of the HTML template
     }
 

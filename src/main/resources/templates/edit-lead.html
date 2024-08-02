@@ -80,7 +80,11 @@
                             <div class="mb-3">
                                 <label class="form-label" for="commercial">Commercial</label>
                                 <select th:field="*{commercial}" id="commercial" class="form-control">
-                                    <option th:each="commercial : ${commercials}" th:value="${commercial.id}" th:text="${commercial.nom} + ' ' + ${commercial.prenom}"></option>
+                                    <option value="" th:text="'-- Aucun --'"></option>
+                                    <option th:each="commercial : ${commercials}"
+                                            th:value="${commercial.id}"
+                                            th:text="${commercial.nom} + ' ' + ${commercial.prenom}"
+                                            th:selected="${lead.commercial != null && lead.commercial.id == commercial.id}"></option>
                                 </select>
                             </div>
 
@@ -92,7 +96,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

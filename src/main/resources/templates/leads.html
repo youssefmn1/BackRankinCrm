@@ -136,11 +136,41 @@
             }
         }
 
-        /* Your existing styles here */
         .custom-alert {
             padding: 15px;  /* Increase padding */
             margin-bottom: 20px;  /* Increase margin bottom */
             font-size: 1rem;  /* Increase font size */
+        }
+
+        .commercial-card {
+            display: none;
+            position: fixed; /* Changed to fixed to avoid layout issues */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1050;
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+        }
+
+        .commercial-card .close {
+            float: right;
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1;
+            color: #000;
+            text-shadow: 0 1px 0 #fff;
+            opacity: 0.5;
+        }
+
+        .commercial-card .close:hover {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 0.75;
         }
     </style>
 </head>
@@ -203,7 +233,10 @@
                             <td th:text="${lead.source}"></td>
                             <td th:text="${lead.note}"></td>
                             <td th:text="${lead.statut}"></td>
-                            <td th:text="${lead.commercial != null ? lead.commercial.nom : 'No commercial'}"></td>
+                            <td>
+                                <span th:if="${lead.commercial != null}" th:text="${lead.commercial.nom}"></span>
+                                <button th:if="${lead.commercial == null}" class="btn btn-sm btn-primary assign-commercial-button" type="button" data-lead-id="${lead.id}">Assign Commercial</button>
+                            </td>
                             <td>
                                 <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-sm btn-primary">Edit</a>
                                 <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/leads/delete/{id}(id=${lead.id})}" class="btn btn-sm btn-danger">Delete</a>
@@ -228,30 +261,15 @@
     </div>
 </div>
 
-<!-- Modal for CSV import -->
-<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="importModalLabel">Import Leads</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" th:action="@{/api/csv/import}" enctype="multipart/form-data" class="form-inline">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="csvFileModal" class="sr-only">Select CSV file</label>
-                        <input type="file" class="form-control-file" id="csvFileModal" name="file" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Import</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<!-- Commercial Card -->
+<div id="commercialCard" class="commercial-card">
+    <span class="close" onclick="closeCommercialCard()">&times;</span>
+    <h5>Select a Commercial</h5>
+    <ul>
+        <li th:each="commercial : ${commercials}">
+            <a href="#" th:onclick="'selectCommercial(' + ${commercial.id} + ',\'' + ${commercial.nom} + '\')'" th:text="${commercial.nom}"></a>
+        </li>
+    </ul>
 </div>
 
 <!-- Include Bootstrap JS and dependencies (jQuery and Popper.js) -->
@@ -259,7 +277,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script>
-    // Select/Deselect all checkboxes
     document.getElementById('select-all').onclick = function() {
         var checkboxes = document.querySelectorAll('.select-lead');
         for (var checkbox of checkboxes) {
@@ -267,10 +284,30 @@
         }
     }
 
-    // Submit the form when the delete button is clicked
     document.getElementById('deleteForm').onsubmit = function() {
         return confirm('Are you sure you want to delete the selected leads?');
     }
+
+    function showCommercialCard(event) {
+        event.preventDefault(); // Prevent form submission
+        console.log('Button clicked'); // Check if the function is called
+        document.getElementById('commercialCard').style.display = 'block';
+    }
+
+    function closeCommercialCard() {
+        document.getElementById('commercialCard').style.display = 'none';
+    }
+
+    function selectCommercial(commercialId, commercialName) {
+        console.log('Selected Commercial ID:', commercialId);
+        console.log('Selected Commercial Name:', commercialName);
+        closeCommercialCard();
+    }
+
+    // Add event listeners to all "Assign Commercial" buttons
+    document.querySelectorAll('.assign-commercial-button').forEach(button => {
+        button.addEventListener('click', showCommercialCard);
+    });
 </script>
 </body>
 </html>
