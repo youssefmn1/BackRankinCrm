@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +23,24 @@ public class LeadService {
     @Autowired
     private CommercialRepository commercialRepository;
 
-    public Page<Lead> findPaginated(int page, int size, String kw) {
-        return leadRepository.findByNomContains(kw, PageRequest.of(page, size));
+    public Page<Lead> findPaginated(@RequestParam(name = "page",defaultValue = "0") int page,
+                                    @RequestParam(name = "size",defaultValue = "5") int size,
+                                    @RequestParam(name = "keyword",defaultValue = "") String kw) {
+
+        return leadRepository.findByNomContains(kw, PageRequest.of(page,size));
     }
 
     public Lead createLead(Lead lead) {
         return leadRepository.save(lead);
     }
+
+    public void assignCommercial(Integer leadId, Integer commercialId) {
+        Lead lead = leadRepository.findById(leadId).orElseThrow(() -> new IllegalArgumentException("Invalid lead Id:" + leadId));
+        Commercial commercial = commercialRepository.findById(commercialId).orElseThrow(() -> new IllegalArgumentException("Invalid commercial Id:" + commercialId));
+        lead.setCommercial(commercial);
+        leadRepository.save(lead);
+    }
+
 
     public Lead getLeadById(Integer id) {
         Optional<Lead> optionalLead = leadRepository.findById(id);
