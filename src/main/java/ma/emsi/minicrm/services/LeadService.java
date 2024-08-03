@@ -8,6 +8,7 @@ import ma.emsi.minicrm.dao.repositories.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -101,7 +102,11 @@ public class LeadService {
         return leadRepository.findAll();
     }
 
-    public List<Lead> getLeadsByCommercialId(Integer commercialId) {
-        return leadRepository.findByCommercialId(commercialId);
+    public Page<Lead> getLeadsByCommercialId(Integer commercialId, String keyword, Pageable pageable) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return leadRepository.findByCommercialIdAndKeyword(commercialId, keyword, pageable);
+        } else {
+            return leadRepository.findByCommercialId(commercialId, pageable);
+        }
     }
 }

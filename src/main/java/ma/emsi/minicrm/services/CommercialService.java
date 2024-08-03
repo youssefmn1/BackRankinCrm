@@ -2,6 +2,7 @@ package ma.emsi.minicrm.services;
 
 import ma.emsi.minicrm.dao.entities.Commercial;
 import ma.emsi.minicrm.dao.entities.Lead;
+import ma.emsi.minicrm.dao.entities.Utilisateur;
 import ma.emsi.minicrm.dao.repositories.CommercialRepository;
 import ma.emsi.minicrm.dao.repositories.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +74,11 @@ public class CommercialService {
 
     public List<Commercial> findAll() {
         return commercialRepository.findAll();
+    }
+
+    public String getCommercialNameById(Integer commercialId) {
+        return commercialRepository.findById(commercialId)
+                .map(Utilisateur::getNom) // Assuming the field is 'name'
+                .orElse("Unknown Commercial");
     }
 }

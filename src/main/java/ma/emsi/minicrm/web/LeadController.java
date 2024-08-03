@@ -6,6 +6,7 @@ import ma.emsi.minicrm.services.LeadService;
 import ma.emsi.minicrm.services.CommercialService;  // Ensure you have a service to fetch commercials
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +54,25 @@ public class LeadController {
     }
 
     @GetMapping("/commercial/{commercialId}")
-    public String getLeadsByCommercialId(@PathVariable Integer commercialId, Model model) {
-        List<Lead> leads = leadService.getLeadsByCommercialId(commercialId);
-        model.addAttribute("leads", leads);
-        return "leads";
+    public String getLeadsByCommercialId(
+            @PathVariable Integer commercialId,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            Model model) {
+
+        Page<Lead> leadsPage = leadService.getLeadsByCommercialId(commercialId, keyword, PageRequest.of(page, 10));
+        String commercialName = commercialService.getCommercialNameById(commercialId);
+
+        model.addAttribute("leads", leadsPage.getContent());
+        model.addAttribute("commercialId", commercialId);
+        model.addAttribute("commercialName", commercialName);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", leadsPage.getTotalPages());
+        return "leadsbycommercial";
     }
+
+
 
     @PostMapping("/assignCommercial")
     public String assignCommercial(@RequestParam Integer leadId, @RequestParam Integer commercialId) {
