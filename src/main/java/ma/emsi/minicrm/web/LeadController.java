@@ -2,6 +2,7 @@ package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.entities.Commercial;
+import ma.emsi.minicrm.dao.entities.Statut;
 import ma.emsi.minicrm.services.LeadService;
 import ma.emsi.minicrm.services.CommercialService;  // Ensure you have a service to fetch commercials
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,10 @@ public class LeadController {
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        List<Commercial> commercials = commercialService.findAll();
-        model.addAttribute("lead", new Lead());
+        List<Commercial> commercials = commercialService.findAll();  // Fetch the list of commercials
+        Lead lead = new Lead();
+        lead.setStatut(Statut.NOUVEAU); // Set default value to NOUVEAU
+        model.addAttribute("lead", lead);
         model.addAttribute("commercials", commercials);  // Add commercials to the model
         return "create-lead";
     }

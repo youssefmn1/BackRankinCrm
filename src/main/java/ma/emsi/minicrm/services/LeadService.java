@@ -54,36 +54,36 @@ public class LeadService {
 
     @Transactional
     public Lead updateLead(Integer id, Lead leadDetails) {
-        Lead lead = getLeadById(id);
-        if (lead != null) {
-            if (lead.getCommercial() != null) {
-                lead.getCommercial().getLeads().remove(lead);
-                System.out.println("Removed lead from old commercial");
-            }
+        Lead lead = leadRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid lead Id: " + id));
 
-            if (leadDetails.getCommercial() != null) {
-                Commercial commercial = commercialRepository.findById(leadDetails.getCommercial().getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid commercial Id: " + leadDetails.getCommercial().getId()));
-                lead.setCommercial(commercial);
-                commercial.getLeads().add(lead);
-                System.out.println("Added lead to new commercial");
-            } else {
-                lead.setCommercial(null);
-            }
-
-            lead.setNom(leadDetails.getNom());
-            lead.setPrenom(leadDetails.getPrenom());
-            lead.setEmail(leadDetails.getEmail());
-            lead.setAdresse(leadDetails.getAdresse());
-            lead.setTelephone(leadDetails.getTelephone());
-            lead.setSource(leadDetails.getSource());
-            lead.setNote(leadDetails.getNote());
-            lead.setStatut(leadDetails.getStatut());
-            return leadRepository.save(lead);
-        } else {
-            return null;
+        if (lead.getCommercial() != null) {
+            lead.getCommercial().getLeads().remove(lead);
+            System.out.println("Removed lead from old commercial");
         }
+
+        if (leadDetails.getCommercial() != null) {
+            Commercial commercial = commercialRepository.findById(leadDetails.getCommercial().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid commercial Id: " + leadDetails.getCommercial().getId()));
+            lead.setCommercial(commercial);
+            commercial.getLeads().add(lead);
+            System.out.println("Added lead to new commercial");
+        } else {
+            lead.setCommercial(null);
+        }
+
+        lead.setNom(leadDetails.getNom());
+        lead.setPrenom(leadDetails.getPrenom());
+        lead.setEmail(leadDetails.getEmail());
+        lead.setAdresse(leadDetails.getAdresse());
+        lead.setTelephone(leadDetails.getTelephone());
+        lead.setSource(leadDetails.getSource());
+        lead.setNote(leadDetails.getNote());
+        lead.setStatut(leadDetails.getStatut());
+
+        return leadRepository.save(lead);
     }
+
 
     public boolean deleteLead(Integer id) {
         Lead lead = getLeadById(id);

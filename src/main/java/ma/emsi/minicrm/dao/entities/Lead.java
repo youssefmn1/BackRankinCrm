@@ -23,7 +23,10 @@ public class Lead {
     private String adresse;
     private String telephone;
     private String source;
-    private String statut;
+
+    @Enumerated(EnumType.STRING)
+    private Statut statut;
+
     private String note;
 
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -3,6 +3,7 @@ package ma.emsi.minicrm.services;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import ma.emsi.minicrm.dao.entities.Lead;
+import ma.emsi.minicrm.dao.entities.Statut;
 import ma.emsi.minicrm.dao.repositories.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class CSVService {
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
             List<String[]> records = reader.readAll();
             for (String[] record : records) {
-                if (record.length < 8) { // Vérification du nombre de colonnes
+                if (record.length < 7) { // Vérification du nombre de colonnes
                     throw new CsvException("Invalid CSV format. Each row must have 8 columns.");
                 }
                 Lead lead = new Lead();
@@ -35,7 +36,7 @@ public class CSVService {
                 lead.setTelephone(record[4]);
                 lead.setSource(record[5]);
                 lead.setNote(record[6]);
-                lead.setStatut(record[7]);
+                lead.setStatut(Statut.NOUVEAU);
                 leads.add(lead);
             }
         }
