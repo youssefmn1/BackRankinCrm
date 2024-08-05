@@ -27,17 +27,24 @@ public class RendezVousController {
     @Autowired
     private CommercialService commercialService;
 
-    // Show the form to create a new rendezvous
     @GetMapping("/new")
-    public String showCreateRendezVousForm(Model model) {
+    public String showCreateRendezVousForm(@RequestParam(name = "leadId", required = false) Integer leadId, Model model) {
         List<Lead> leads = leadService.getAllLeads(); // Get all leads
         List<Commercial> commercials = commercialService.getAllCommercials(); // Get all commercials
 
         model.addAttribute("leads", leads);
         model.addAttribute("commercials", commercials);
         model.addAttribute("rendezVous", new RendezVous());
-        return "create-rendezvous";  // Returns the name of the HTML template
+
+        // If a leadId is provided, add it to the model
+        if (leadId != null) {
+            model.addAttribute("selectedLeadId", leadId);
+        }
+
+        return "create-rendezvous";
     }
+
+
     @PostMapping
     public String createRendezVous(@RequestParam("date") String date,
                                    @RequestParam("heure") String heure,

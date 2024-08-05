@@ -58,8 +58,11 @@
             <div class="mb-3">
               <label class="form-label">Lead</label>
               <select name="lead" class="form-select" required>
-                <option value="" selected disabled>Select a Lead</option>
-                <option th:each="lead : ${leads}" th:value="${lead.id}" th:text="${lead.nom + ' ' + lead.prenom}"></option>
+                <option value="" disabled>Select a Lead</option>
+                <option th:each="lead : ${leads}"
+                        th:value="${lead.id}"
+                        th:text="${lead.nom + ' ' + lead.prenom}"
+                        th:selected="${lead.id == selectedLeadId}"></option>
               </select>
             </div>
             <div class="mb-3">

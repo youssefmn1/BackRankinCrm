@@ -69,7 +69,7 @@
 
         .btn-outline-secondary {
             border-color: var(--primary-color);
-            color: var (--primary-color);
+            color: var(--primary-color);
             border-radius: var(--border-radius);
         }
 
@@ -185,7 +185,6 @@
                 <table class="table table-hover table-bordered">
                     <thead class="thead-light">
                     <tr>
-                        <th><input type="checkbox" id="select-all"></th>
                         <th>Id</th>
                         <th>Nom</th>
                         <th>Prenom</th>
@@ -195,12 +194,12 @@
                         <th>Note</th>
                         <th>Statut</th>
                         <th>Commercial</th>
+                        <th>Rendez-vous</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="lead, iterStat : ${leads}">
-                        <td><input type="checkbox" class="select-lead" name="selectedLeads" th:value="${lead.id}"></td>
                         <td th:text="${lead.id}"></td>
                         <td th:text="${lead.nom}"></td>
                         <td th:text="${lead.prenom}"></td>
@@ -218,6 +217,16 @@
                                 </select>
                                 <button type="submit" class="btn btn-sm btn-primary ml-2">Assign</button>
                             </form>
+                        </td>
+                        <td>
+                            <div th:if="${lead.rendezVous == null}">
+                                <a th:href="@{/rendezvous/new(leadId=${lead.id})}" class="btn btn-sm btn-success">
+                                    Create Rendez-vous
+                                </a>
+                            </div>
+                            <div th:if="${lead.rendezVous != null}">
+                                <span th:text="'Rendez-vous ID: ' + ${lead.rendezVous.id}"></span>
+                            </div>
                         </td>
                         <td>
                             <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-sm btn-primary">Edit</a>
