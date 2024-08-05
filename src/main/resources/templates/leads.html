@@ -159,8 +159,17 @@
         <div class="card-header">
             <div class="header-title">
                 <h5>List of Leads</h5>
-                <a href="/leads/new" class="btn btn-primary">Add New Lead</a>
+                <a href="/leads/new" class="btn btn-primary">
+                   New Lead<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="margin-left: 8px;">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M20 18L17 18M17 18L14 18M17 18V15M17 18V21M11 21H4C4 17.134 7.13401 14 11 14C11.695 14 12.3663 14.1013 13 14.2899M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                    </svg>
+                </a>
             </div>
+
         </div>
         <div class="card-body">
             <div class="custom-alert" th:if="${message}" th:classappend="${alertClass}" th:text="${message}"></div>
@@ -170,16 +179,37 @@
                         <label for="csvFile" class="sr-only">Select CSV file</label>
                         <input type="file" class="form-control-file" id="csvFile" name="file" required>
                     </div>
-                    <button type="submit" class="btn btn-primary ml-2">Import</button>
+                    <button type="submit" class="btn btn-primary ml-2">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M12 14L11.2929 14.7071L12 15.4142L12.7071 14.7071L12 14ZM13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44771 11 5L13 5ZM6.29289 9.70711L11.2929 14.7071L12.7071 13.2929L7.70711 8.29289L6.29289 9.70711ZM12.7071 14.7071L17.7071 9.70711L16.2929 8.29289L11.2929 13.2929L12.7071 14.7071ZM13 14L13 5L11 5L11 14L13 14Z" fill="#ffffff"></path>
+                                <path d="M5 16L5 17C5 18.1046 5.89543 19 7 19L17 19C18.1046 19 19 18.1046 19 17V16" stroke="#ffffff" stroke-width="2"></path>
+                            </g>
+                        </svg>
+                    </button>
                 </form>
             </div>
+
             <form method="get" th:action="@{/leads}">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search by name" name="keyword" th:value="${keyword}">
+
+                        <input type="text" class="form-control" placeholder="Search by name" name="keyword" th:value="${keyword}">
+
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M18.5 19.5L20 21M11 14C7.13401 14 4 17.134 4 21H11M19 17.5C19 18.8807 17.8807 20 16.5 20C15.1193 20 14 18.8807 14 17.5C14 16.1193 15.1193 15 16.5 15C17.8807 15 19 16.1193 19 17.5ZM15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </button>
                     </div>
                 </div>
+
             </form>
             <div class="table-container">
                 <table class="table table-hover table-bordered">
