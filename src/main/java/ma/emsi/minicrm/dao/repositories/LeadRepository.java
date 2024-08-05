@@ -19,6 +19,9 @@ public interface LeadRepository extends JpaRepository<Lead,Integer> {
 
      Page<Lead> findByCommercialId(Integer commercialId, Pageable pageable);
 
+     void deleteAllByIdIn(List<Integer> leadIds);
+
+
      @Query("SELECT l FROM Lead l WHERE l.commercial.id = :commercialId AND (l.nom LIKE %:keyword% OR l.prenom LIKE %:keyword%)")
      Page<Lead> findByCommercialIdAndKeyword(@Param("commercialId") Integer commercialId, @Param("keyword") String keyword, Pageable pageable);
 }

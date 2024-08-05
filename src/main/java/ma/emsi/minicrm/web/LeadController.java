@@ -7,6 +7,8 @@ import ma.emsi.minicrm.services.CommercialService;  // Ensure you have a service
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -72,13 +74,13 @@ public class LeadController {
         return "leadsbycommercial";
     }
 
-
-
+    
     @PostMapping("/assignCommercial")
     public String assignCommercial(@RequestParam Integer leadId, @RequestParam Integer commercialId) {
         leadService.assignCommercial(leadId, commercialId);
         return "redirect:/leads";
     }
+
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
@@ -101,12 +103,19 @@ public class LeadController {
         return "redirect:/leads";
     }
 
+    public LeadController(LeadService leadService) {
+        this.leadService = leadService;
+    }
+
     @PostMapping("/deleteSelected")
-    public String deleteSelected(@RequestParam(required = false) List<Integer> selectedLeads) {
-        if (selectedLeads != null) {
-            selectedLeads.forEach(leadService::deleteLead);
+    @ResponseBody
+    public ResponseEntity<Void> deleteSelectedLeads(@RequestBody List<Integer> leadIds) {
+        try {
+            leadService.deleteLeads(leadIds);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return "redirect:/leads";
     }
 
 }

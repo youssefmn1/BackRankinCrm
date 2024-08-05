@@ -69,7 +69,7 @@
 
         .btn-outline-secondary {
             border-color: var(--primary-color);
-            color: var(--primary-color);
+            color: var (--primary-color);
             border-radius: var(--border-radius);
         }
 
@@ -181,71 +181,68 @@
                     </div>
                 </div>
             </form>
-            <form method="post" th:action="@{/leads/deleteSelected}" id="deleteForm">
-                <div class="table-container">
-                    <table class="table table-hover table-bordered">
-                        <thead class="thead-light">
-                        <tr>
-                            <th><input type="checkbox" id="select-all"></th>
-                            <th>Id</th>
-                            <th>Nom</th>
-                            <th>Prenom</th>
-                            <th>Email</th>
-                            <th>Telephone</th>
-                            <th>Source</th>
-                            <th>Note</th>
-                            <th>Statut</th>
-                            <th>Commercial</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="lead : ${leads}">
-                            <td><input type="checkbox" class="select-lead" name="selectedLeads" th:value="${lead.id}"></td>
-                            <td th:text="${lead.id}"></td>
-                            <td th:text="${lead.nom}"></td>
-                            <td th:text="${lead.prenom}"></td>
-                            <td th:text="${lead.email}"></td>
-                            <td th:text="${lead.telephone}"></td>
-                            <td th:text="${lead.source}"></td>
-                            <td th:text="${lead.note}"></td>
-                            <td th:text="${lead.statut}"></td>
-                            <td>
-                                <form th:action="@{/leads/assignCommercial}" method="post" class="form-inline">
-                                    <input type="hidden" name="leadId" th:value="${lead.id}">
-                                    <select class="form-control form-control-sm" name="commercialId" required>
-                                        <option value="" th:text="'-- Select Commercial --'"></option>
-                                        <option th:each="commercial : ${commercials}" th:value="${commercial.id}" th:text="${commercial.nom + ' ' + commercial.prenom}" th:selected="${lead.commercial != null} ? ${lead.commercial.id} == ${commercial.id} : false"></option>
-                                    </select>
-                                    <button type="submit" class="btn btn-sm btn-primary ml-2">Assign</button>
-                                </form>
-                            </td>
-
-                            <td>
-                                <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-sm btn-primary">Edit</a>
-                                <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/leads/delete/{id}(id=${lead.id})}" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <button onclick="return confirm('Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?')" type="submit" class="btn btn-danger mt-3">Delete Selected</button>
-                    <ul class="nav nav-pills d-flex justify-content-center">
-                        <li th:each="page,status:${pages}">
-                            <a th:href="@{/leads(page=${status.index},keyword=${keyword})}"
-                               th:class="${currentPage==status.index?'btn btn-custom-blue ms-1':'btn btn-outline-primary ms-1'}"
-                               th:text="${1+status.index}"
-                               class="btn btn-light"></a>
-                        </li>
-                    </ul>
-                </div>
-            </form>
+            <div class="table-container">
+                <table class="table table-hover table-bordered">
+                    <thead class="thead-light">
+                    <tr>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Email</th>
+                        <th>Telephone</th>
+                        <th>Source</th>
+                        <th>Note</th>
+                        <th>Statut</th>
+                        <th>Commercial</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lead, iterStat : ${leads}">
+                        <td><input type="checkbox" class="select-lead" name="selectedLeads" th:value="${lead.id}"></td>
+                        <td th:text="${lead.id}"></td>
+                        <td th:text="${lead.nom}"></td>
+                        <td th:text="${lead.prenom}"></td>
+                        <td th:text="${lead.email}"></td>
+                        <td th:text="${lead.telephone}"></td>
+                        <td th:text="${lead.source}"></td>
+                        <td th:text="${lead.note}"></td>
+                        <td th:text="${lead.statut}"></td>
+                        <td>
+                            <form th:action="@{/leads/assignCommercial}" method="post" class="form-inline" id="assignCommercialForm" th:id="'assignCommercialForm-' + ${lead.id}">
+                                <input type="hidden" name="leadId" th:value="${lead.id}">
+                                <select class="form-control form-control-sm commercial-select" name="commercialId">
+                                    <option value="" th:text="'-- Select Commercial --'"></option>
+                                    <option th:each="commercial : ${commercials}" th:value="${commercial.id}" th:text="${commercial.nom + ' ' + commercial.prenom}" th:selected="${lead.commercial != null} ? ${lead.commercial.id} == ${commercial.id} : false"></option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary ml-2">Assign</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a th:href="@{/leads/edit/{id}(id=${lead.id})}" class="btn btn-sm btn-primary">Edit</a>
+                            <a onclick="return confirm('Êtes-vous sûr?')" th:href="@{/leads/delete/{id}(id=${lead.id})}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <button id="delete-selected" class="btn btn-danger mt-3">Delete Selected</button>
+                <ul class="nav nav-pills d-flex justify-content-center">
+                    <li th:each="page,status:${pages}">
+                        <a th:href="@{/leads(page=${status.index},keyword=${keyword})}"
+                           th:class="${currentPage==status.index?'btn btn-custom-blue ms-1':'btn btn-outline-primary ms-1'}"
+                           th:text="${1+status.index}"
+                           class="btn btn-light"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script>
@@ -255,9 +252,32 @@
             $('.select-lead').prop('checked', this.checked);
         });
 
-        // Confirm deletion of selected leads
-        $('#deleteForm').on('submit', function() {
-            return confirm('Are you sure you want to delete the selected leads?');
+        // AJAX request to delete selected leads
+        $('#delete-selected').on('click', function() {
+            var selectedLeads = [];
+            $('.select-lead:checked').each(function() {
+                selectedLeads.push($(this).val());
+            });
+
+            if (selectedLeads.length > 0) {
+                if (confirm('Are you sure you want to delete the selected leads?')) {
+                    $.ajax({
+                        url: '/leads/deleteSelected',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(selectedLeads),
+                        success: function(response) {
+                            alert('Selected leads deleted successfully');
+                            location.reload();  // Reload the page to reflect the changes
+                        },
+                        error: function(error) {
+                            alert('An error occurred while deleting selected leads');
+                        }
+                    });
+                }
+            } else {
+                alert('No leads selected');
+            }
         });
     });
 </script>

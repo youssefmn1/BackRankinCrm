@@ -109,4 +109,11 @@ public class LeadService {
             return leadRepository.findByCommercialId(commercialId, pageable);
         }
     }
+    public LeadService(LeadRepository leadRepository) {
+        this.leadRepository = leadRepository;
+    }
+
+    public void deleteLeads(List<Integer> leadIds) {
+        leadRepository.deleteAllByIdIn(leadIds);
+    }
 }
