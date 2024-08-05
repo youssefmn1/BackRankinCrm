@@ -116,4 +116,8 @@ public class LeadService {
     public void deleteLeads(List<Integer> leadIds) {
         leadRepository.deleteAllByIdIn(leadIds);
     }
+    //pour RDV
+    public Lead getLeadId(Integer id) {
+        return leadRepository.findById(id).orElse(null);
+    }
 }

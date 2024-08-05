@@ -81,4 +81,8 @@ public class CommercialService {
                 .map(Utilisateur::getNom) // Assuming the field is 'name'
                 .orElse("Unknown Commercial");
     }
+    //pour RDV
+    public Commercial getCommercialId(Integer id) {
+        return commercialRepository.findById(id).orElse(null);
+    }
 }
