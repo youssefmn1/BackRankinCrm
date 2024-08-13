@@ -1,21 +1,20 @@
 package ma.emsi.minicrm.dao.entities;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
 import java.util.List;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-
 public class Lead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
     private String nom;
     private String prenom;
@@ -30,13 +29,15 @@ public class Lead {
     private String note;
 
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"lead", "otherFields"})
     private List<Interaction> interactions;
 
     @ManyToOne
     @JoinColumn(name = "commercial_id")
+    @JsonIgnoreProperties({"leads", "rendezVousList", "otherFields"})
     private Commercial commercial;
 
-
     @OneToOne(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"lead","commercial", "otherFields"})
     private RendezVous rendezVous;
 }

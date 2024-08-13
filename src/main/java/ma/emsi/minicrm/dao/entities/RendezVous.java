@@ -1,5 +1,6 @@
 package ma.emsi.minicrm.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,5 +33,6 @@ public class RendezVous {
 
     @ManyToOne
     @JoinColumn(name = "commercial_id")
+
     private Commercial commercial;
 }
