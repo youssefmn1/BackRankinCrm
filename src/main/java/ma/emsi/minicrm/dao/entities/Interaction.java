@@ -1,5 +1,6 @@
 package ma.emsi.minicrm.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,6 @@ public class Interaction {
 
     @ManyToOne
     @JoinColumn(name = "lead_id")
+    @JsonIgnoreProperties({"interactions","lead","commercial", "otherFields"})
     private Lead lead;
 }
