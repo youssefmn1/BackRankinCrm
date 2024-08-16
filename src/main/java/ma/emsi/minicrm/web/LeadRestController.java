@@ -1,6 +1,7 @@
 package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Lead;
+import ma.emsi.minicrm.dao.entities.Statut;
 import ma.emsi.minicrm.services.LeadService;
 import ma.emsi.minicrm.services.CommercialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class LeadRestController {
     // Create a new lead (POST /api/v1/leads)
     @PostMapping
     public ResponseEntity<Lead> createLead(@RequestBody Lead lead) {
+        lead.setStatut(Statut.NOUVEAU);
         Lead createdLead = leadService.createLead(lead);
         return ResponseEntity.ok(createdLead);
     }
