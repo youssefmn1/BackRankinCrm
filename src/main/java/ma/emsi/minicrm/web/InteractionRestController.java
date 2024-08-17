@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 @Controller
-@RequestMapping("/api/interactions")
+@RequestMapping("api/interactions")
 public class InteractionRestController {
 
     @Autowired
