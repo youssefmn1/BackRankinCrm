@@ -1,6 +1,7 @@
 package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Commercial;
+import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.entities.Role;
 import ma.emsi.minicrm.services.CommercialService;
 import ma.emsi.minicrm.services.LeadService;
@@ -68,6 +69,18 @@ public class CommercialRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    // Retrieve leads associated with a specific commercial
+    @GetMapping("/{id}/leads")
+    public ResponseEntity<List<Lead>> getLeadsByCommercialId(@PathVariable Integer id) {
+        Commercial commercial = commercialService.getCommercialById(id);
+        if (commercial != null) {
+            List<Lead> leads = leadService.getLeadsByCommercialId(id);
+            return new ResponseEntity<>(leads, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     // Delete selected commercials
     @PostMapping("/deleteSelected")

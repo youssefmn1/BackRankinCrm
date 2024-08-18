@@ -109,6 +109,10 @@ public class LeadService {
             return leadRepository.findByCommercialId(commercialId, pageable);
         }
     }
+
+    public List<Lead> getLeadsByCommercialId(Integer commercialId) {
+        return leadRepository.findByCommercialId(commercialId);
+    }
     public LeadService(LeadRepository leadRepository) {
         this.leadRepository = leadRepository;
     }
