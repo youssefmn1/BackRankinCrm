@@ -1,5 +1,6 @@
 package ma.emsi.minicrm.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,10 +30,11 @@ public class RendezVous {
 
     @OneToOne
     @JoinColumn(name = "lead_id")
+    @JsonIgnoreProperties({"commercial", "rendezVous", "interactions", "otherFields"})
     private Lead lead;
 
     @ManyToOne
     @JoinColumn(name = "commercial_id")
-
+    @JsonIgnoreProperties({"leads", "rendezVousList", "otherFields"})
     private Commercial commercial;
 }
