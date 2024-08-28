@@ -1,5 +1,6 @@
 package ma.emsi.minicrm.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -24,6 +25,7 @@ public class RendezVous {
     private Date date;
 
     @Temporal(TemporalType.TIME)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private Time heure;
 
     private String lieu;

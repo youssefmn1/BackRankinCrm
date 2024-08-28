@@ -1,5 +1,8 @@
 package ma.emsi.minicrm.services;
 
+import jakarta.persistence.EntityNotFoundException;
+import ma.emsi.minicrm.dao.entities.Commercial;
+import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.entities.RendezVous;
 import ma.emsi.minicrm.dao.repositories.RendezVousRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +51,14 @@ public class RendezVousService {
         }
     }
 
-    public boolean deleteRendezVous(Integer id) {
-        RendezVous rendezVous = getRendezVousById(id);
-        if (rendezVous != null) {
-            rendezVousRepository.delete(rendezVous);
-            return true;
+    public void deleteRendezVous(Integer id) {
+        // Check if the RendezVous exists
+        if (rendezVousRepository.existsById(id)) {
+            // Perform the deletion
+            rendezVousRepository.deleteById(id);
         } else {
-            return false;
+            // Handle the case where the RendezVous does not exist
+            throw new EntityNotFoundException("RendezVous with ID " + id + " not found");
         }
     }
 }
