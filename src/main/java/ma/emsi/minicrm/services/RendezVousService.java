@@ -52,13 +52,15 @@ public class RendezVousService {
     }
 
     public void deleteRendezVous(Integer id) {
-        // Check if the RendezVous exists
-        if (rendezVousRepository.existsById(id)) {
-            // Perform the deletion
-            rendezVousRepository.deleteById(id);
+        RendezVous rendezVous = getRendezVousById(id);
+        if (rendezVous != null) {
+            rendezVous.setCommercial(null);
+            rendezVous.setLead(null);
+            rendezVousRepository.delete(rendezVous);
+            System.out.println("RendezVous deleted successfully.");
         } else {
-            // Handle the case where the RendezVous does not exist
             throw new EntityNotFoundException("RendezVous with ID " + id + " not found");
         }
     }
+
 }
