@@ -51,16 +51,14 @@ public class RendezVousService {
         }
     }
 
-    public void deleteRendezVous(Integer id) {
-        RendezVous rendezVous = getRendezVousById(id);
-        if (rendezVous != null) {
-            rendezVous.setCommercial(null);
-            rendezVous.setLead(null);
-            rendezVousRepository.delete(rendezVous);
-            System.out.println("RendezVous deleted successfully.");
-        } else {
-            throw new EntityNotFoundException("RendezVous with ID " + id + " not found");
-        }
+   public void deleteRendezVous(Integer id) {
+    RendezVous rendezVous = getRendezVousById(id);
+    if (rendezVous != null) {
+        rendezVousRepository.delete(rendezVous);
+        System.out.println("RendezVous deleted successfully.");
+    } else {
+        throw new EntityNotFoundException("RendezVous with ID " + id + " not found");
     }
+}
 
 }

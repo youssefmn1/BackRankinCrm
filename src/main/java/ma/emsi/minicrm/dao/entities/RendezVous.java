@@ -30,7 +30,7 @@ public class RendezVous {
 
     private String lieu;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "lead_id")
     @JsonIgnoreProperties({"commercial", "rendezVous", "interactions", "otherFields"})
     private Lead lead;
