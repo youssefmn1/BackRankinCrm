@@ -1,13 +1,16 @@
 package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Lead;
+import ma.emsi.minicrm.dao.entities.FileMetadata;
 import ma.emsi.minicrm.dao.entities.Statut;
 import ma.emsi.minicrm.services.LeadService;
+import ma.emsi.minicrm.services.FileService;
 import ma.emsi.minicrm.services.CommercialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,10 +24,13 @@ public class LeadRestController {
     @Autowired
     private CommercialService commercialService;
 
+    @Autowired
+    private FileService fileService;
+
     // Get all leads (GET /api/v1/leads)
     @GetMapping
     public ResponseEntity<List<Lead>> getAllLeads() {
-        List<Lead> leads = leadService.getAllLeads(); // Assuming you have a method in LeadService that fetches all leads
+        List<Lead> leads = leadService.getAllLeads();
         return ResponseEntity.ok(leads);
     }
 
@@ -45,7 +51,6 @@ public class LeadRestController {
         Lead createdLead = leadService.createLead(lead);
         return ResponseEntity.ok(createdLead);
     }
-
 
     // Assign a lead to a commercial (PUT /api/v1/leads/assignCommercial)
     @PutMapping("/assignCommercial")
@@ -82,5 +87,23 @@ public class LeadRestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    // Upload a file and attach it to a lead (POST /api/v1/leads/{leadId}/files/upload)
+    @PostMapping("/{leadId}/files/upload")
+    public ResponseEntity<FileMetadata> uploadFile(@PathVariable Integer leadId, @RequestParam("file") MultipartFile file) {
+        try {
+            FileMetadata fileMetadata = fileService.saveFile(file, leadId);
+            return ResponseEntity.ok(fileMetadata);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Get all files attached to a specific lead (GET /api/v1/leads/{leadId}/files)
+    @GetMapping("/{leadId}/files")
+    public ResponseEntity<List<FileMetadata>> getFilesByLeadId(@PathVariable Integer leadId) {
+        List<FileMetadata> files = fileService.getFilesByLeadId(leadId);
+        return ResponseEntity.ok(files);
     }
 }

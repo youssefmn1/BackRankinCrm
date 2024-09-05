@@ -34,10 +34,14 @@ public class Lead {
 
     @ManyToOne
     @JoinColumn(name = "commercial_id")
-    @JsonIgnoreProperties({"leads", "rendezVousList", "otherFields"})
+    @JsonIgnoreProperties({"leads", "rendezVousList","files", "otherFields"})
     private Commercial commercial;
 
     @OneToOne(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties({"lead","commercial", "otherFields"})
+    @JsonIgnoreProperties({"lead","commercial","files", "otherFields"})
     private RendezVous rendezVous;
+
+    @OneToMany(mappedBy = "lead")
+    @JsonIgnoreProperties({"lead","commercial","commercial", "otherFields"})
+    private List<FileMetadata> files;
 }
