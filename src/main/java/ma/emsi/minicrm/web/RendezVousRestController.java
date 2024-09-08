@@ -83,44 +83,35 @@ public class RendezVousRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RendezVous> updateRendezVous(@PathVariable Integer id, @RequestBody RendezVous rendezVous) {
-        // Vérifier que l'ID du rendez-vous dans l'URL correspond à celui dans le corps de la requête
         if (rendezVous == null || rendezVous.getId() == null || !id.equals(rendezVous.getId())) {
-            System.out.println("Lead is missing or has no ID!");
-            return ResponseEntity.badRequest().body(null); // ID mismatch or null
+            return ResponseEntity.badRequest().body(null);
         }
 
-
-        // Vérifier que le rendez-vous existe
         RendezVous existingRendezVous = rendezVousService.getRendezVousById(id);
         if (existingRendezVous == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Rendez-vous non trouvé
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // Mise à jour des informations du rendez-vous
-        if (rendezVous.getDate() != null) {
-            existingRendezVous.setDate(rendezVous.getDate());
-        }
-        if (rendezVous.getHeure() != null) {
-            existingRendezVous.setHeure(rendezVous.getHeure());
-        }
-        if (rendezVous.getLieu() != null) {
-            existingRendezVous.setLieu(rendezVous.getLieu());
-        }
+        existingRendezVous.setDate(rendezVous.getDate());
+        existingRendezVous.setHeure(rendezVous.getHeure());
+        existingRendezVous.setLieu(rendezVous.getLieu());
 
-        // Mettre à jour les entités associées Lead et Commercial si elles sont présentes
-        if (rendezVous.getLead() != null && rendezVous.getLead().getId() != null) {
+        if (rendezVous.getLead() != null) {
             existingRendezVous.setLead(leadService.getLeadById(rendezVous.getLead().getId()));
+        } else {
+            existingRendezVous.setLead(null);
         }
-        if (rendezVous.getCommercial() != null && rendezVous.getCommercial().getId() != null) {
+
+        if (rendezVous.getCommercial() != null) {
             existingRendezVous.setCommercial(commercialService.getCommercialById(rendezVous.getCommercial().getId()));
+        } else {
+            existingRendezVous.setCommercial(null);
         }
 
-        // Sauvegarder le rendez-vous mis à jour
-        RendezVous updatedRendezVous = rendezVousService.updateRendezVous(id,existingRendezVous);
-
-        // Retourner la réponse avec le rendez-vous mis à jour
+        RendezVous updatedRendezVous = rendezVousService.updateRendezVous(id, existingRendezVous);
         return ResponseEntity.ok(updatedRendezVous);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRendezVous(@PathVariable Integer id) {

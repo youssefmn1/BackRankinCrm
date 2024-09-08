@@ -1,12 +1,15 @@
 package ma.emsi.minicrm.web;
 
+import ma.emsi.minicrm.dao.entities.Interaction;
 import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.entities.FileMetadata;
 import ma.emsi.minicrm.dao.entities.Statut;
+import ma.emsi.minicrm.services.InteractionService;
 import ma.emsi.minicrm.services.LeadService;
 import ma.emsi.minicrm.services.FileService;
 import ma.emsi.minicrm.services.CommercialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,9 @@ public class LeadRestController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private InteractionService interactionService;
 
     // Get all leads (GET /api/v1/leads)
     @GetMapping
@@ -106,4 +112,28 @@ public class LeadRestController {
         List<FileMetadata> files = fileService.getFilesByLeadId(leadId);
         return ResponseEntity.ok(files);
     }
+    @GetMapping("/{leadId}/interactions")
+    public ResponseEntity<List<Interaction>> getInteractionsByLeadId(@PathVariable Integer leadId) {
+        List<Interaction> interactions = interactionService.getInteractionsByLeadId(leadId);
+        if (interactions == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(interactions);
+    }
+
+
+    // Create an interaction for a lead (POST /api/v1/leads/{leadId}/interactions)
+    @PostMapping("/{leadId}/interactions")
+    public ResponseEntity<Interaction> createInteractionForLead(@PathVariable Integer leadId, @RequestBody Interaction interaction) {
+        Lead lead = leadService.getLeadById(leadId);
+        if (lead == null) {
+            return ResponseEntity.notFound().build();
+        }
+        interaction.setLead(lead);
+        Interaction savedInteraction = interactionService.saveInteraction(interaction);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/leads/" + leadId + "/interactions/" + savedInteraction.getId());
+        return new ResponseEntity<>(savedInteraction, headers, HttpStatus.CREATED);
+    }
+
 }

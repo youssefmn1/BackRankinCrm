@@ -41,4 +41,8 @@ public class InteractionService {
     public boolean existsById(Integer id) {
         return interactionRepository.existsById(id);
     }
+
+    public List<Interaction> getInteractionsByLeadId(Integer leadId) {
+        return interactionRepository.findByLeadId(leadId);
+    }
 }

@@ -2,6 +2,7 @@ package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Interaction;
 import ma.emsi.minicrm.services.InteractionService;
+import ma.emsi.minicrm.services.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,12 +11,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("api/interactions")
 public class InteractionRestController {
 
     @Autowired
     private InteractionService interactionService;
+
+    @Autowired
+    private LeadService leadService;
 
     @GetMapping
     public ResponseEntity<Page<Interaction>> listInteractions(@RequestParam(defaultValue = "0") int page,
@@ -36,11 +42,25 @@ public class InteractionRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Interaction> createInteraction(@RequestBody Interaction interaction) {
+    public ResponseEntity<Interaction> createInteractionForLead(@PathVariable Integer leadId, @RequestBody Interaction interaction) {
+        // Check if the lead exists
+        if (!leadService.existsById(leadId)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        // Optionally, set the lead to the interaction
+        //interaction.setLeadId(leadId); // Assuming you have a method to set the leadId
         Interaction savedInteraction = interactionService.saveInteraction(interaction);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/interactions/" + savedInteraction.getId());
+        headers.add("Location", "/api/leads/" + leadId + "/interactions/" + savedInteraction.getId());
         return new ResponseEntity<>(savedInteraction, headers, HttpStatus.CREATED);
+    }
+    @GetMapping("/{leadId}/interactions")
+    public ResponseEntity<List<Interaction>> getInteractionsByLeadId(@PathVariable Integer leadId) {
+        List<Interaction> interactions = interactionService.getInteractionsByLeadId(leadId);
+        if (interactions == null || interactions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(interactions);
     }
 
     @PutMapping("/{id}")

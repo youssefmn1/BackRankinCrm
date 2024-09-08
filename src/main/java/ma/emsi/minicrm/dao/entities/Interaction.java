@@ -32,4 +32,5 @@ public class Interaction {
     @JoinColumn(name = "lead_id")
     @JsonIgnoreProperties({"interactions","lead","commercial", "otherFields"})
     private Lead lead;
+
 }

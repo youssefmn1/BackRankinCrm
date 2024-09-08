@@ -80,6 +80,7 @@ public class LeadService {
         lead.setSource(leadDetails.getSource());
         lead.setNote(leadDetails.getNote());
         lead.setStatut(leadDetails.getStatut());
+        //lead.setInteractions(leadDetails.getInteractions());
 
         return leadRepository.save(lead);
     }
@@ -123,5 +124,9 @@ public class LeadService {
     //pour RDV
     public Lead getLeadId(Integer id) {
         return leadRepository.findById(id).orElse(null);
+    }
+
+    public boolean existsById(Integer id) {
+        return leadRepository.existsById(id);
     }
 }
