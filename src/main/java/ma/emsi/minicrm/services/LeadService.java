@@ -3,7 +3,9 @@ package ma.emsi.minicrm.services;
 import jakarta.transaction.Transactional;
 import ma.emsi.minicrm.dao.entities.Commercial;
 import ma.emsi.minicrm.dao.entities.Lead;
+import ma.emsi.minicrm.dao.entities.LeadHistory;
 import ma.emsi.minicrm.dao.repositories.CommercialRepository;
+import ma.emsi.minicrm.dao.repositories.LeadHistoryRepository;
 import ma.emsi.minicrm.dao.repositories.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,9 @@ public class LeadService {
     @Autowired
     private CommercialRepository commercialRepository;
 
+    @Autowired
+    private LeadHistoryRepository leadHistoryRepository;
+
     public Page<Lead> findPaginated(@RequestParam(name = "page",defaultValue = "0") int page,
                                     @RequestParam(name = "size",defaultValue = "5") int size,
                                     @RequestParam(name = "keyword",defaultValue = "") String kw) {
@@ -32,8 +38,28 @@ public class LeadService {
     }
 
     public Lead createLead(Lead lead) {
-        return leadRepository.save(lead);
+        Lead createdLead = leadRepository.save(lead);
+        recordHistory(createdLead, "CREATE"); // Enregistrez l'historique avec le type "CREATE"
+        return createdLead;
     }
+
+    private void recordHistory(Lead lead, String modificationType) {
+        LeadHistory leadHistory = new LeadHistory();
+        leadHistory.setLead(lead);
+        leadHistory.setModificationDate(LocalDateTime.now());
+        leadHistory.setModificationType(modificationType);
+        leadHistory.setNom(lead.getNom());
+        leadHistory.setPrenom(lead.getPrenom());
+        leadHistory.setEmail(lead.getEmail());
+        leadHistory.setAdresse(lead.getAdresse());
+        leadHistory.setTelephone(lead.getTelephone());
+        leadHistory.setSource(lead.getSource());
+        leadHistory.setStatut(lead.getStatut());
+        leadHistory.setNote(lead.getNote());
+
+        leadHistoryRepository.save(leadHistory);
+    }
+
 
     public void assignCommercial(Integer leadId, Integer commercialId) {
         Lead lead = leadRepository.findById(leadId).orElseThrow(() -> new IllegalArgumentException("Invalid lead Id:" + leadId));
@@ -57,21 +83,7 @@ public class LeadService {
         Lead lead = leadRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid lead Id: " + id));
 
-        if (lead.getCommercial() != null) {
-            lead.getCommercial().getLeads().remove(lead);
-            System.out.println("Removed lead from old commercial");
-        }
-
-        if (leadDetails.getCommercial() != null) {
-            Commercial commercial = commercialRepository.findById(leadDetails.getCommercial().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid commercial Id: " + leadDetails.getCommercial().getId()));
-            lead.setCommercial(commercial);
-            commercial.getLeads().add(lead);
-            System.out.println("Added lead to new commercial");
-        } else {
-            lead.setCommercial(null);
-        }
-
+        // Update lead details
         lead.setNom(leadDetails.getNom());
         lead.setPrenom(leadDetails.getPrenom());
         lead.setEmail(leadDetails.getEmail());
@@ -80,10 +92,26 @@ public class LeadService {
         lead.setSource(leadDetails.getSource());
         lead.setNote(leadDetails.getNote());
         lead.setStatut(leadDetails.getStatut());
-        //lead.setInteractions(leadDetails.getInteractions());
 
-        return leadRepository.save(lead);
+        // Handle commercial assignment
+        if (leadDetails.getCommercial() != null) {
+            Commercial commercial = commercialRepository.findById(leadDetails.getCommercial().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid commercial Id: " + leadDetails.getCommercial().getId()));
+            lead.setCommercial(commercial);
+            commercial.getLeads().add(lead);
+        } else {
+            if (lead.getCommercial() != null) {
+                lead.getCommercial().getLeads().remove(lead);
+            }
+            lead.setCommercial(null);
+        }
+
+        // Save and record history
+        Lead updatedLead = leadRepository.save(lead);
+        recordHistory(updatedLead, "UPDATE"); // Enregistrez l'historique avec le type "UPDATE"
+        return updatedLead;
     }
+
 
 
     public boolean deleteLead(Integer id) {
@@ -93,11 +121,13 @@ public class LeadService {
                 lead.getCommercial().getLeads().remove(lead);
             }
             leadRepository.delete(lead);
+            recordHistory(lead, "DELETE"); // Enregistrez l'historique avec le type "DELETE"
             return true;
         } else {
             return false;
         }
     }
+
 
     public List<Lead> findAll() {
         return leadRepository.findAll();
@@ -125,6 +155,10 @@ public class LeadService {
     public Lead getLeadId(Integer id) {
         return leadRepository.findById(id).orElse(null);
     }
+    public List<LeadHistory> getLeadHistory(Integer leadId) {
+        return leadHistoryRepository.findByLeadId(leadId);
+    }
+
 
     public boolean existsById(Integer id) {
         return leadRepository.existsById(id);

@@ -1,9 +1,6 @@
 package ma.emsi.minicrm.web;
 
-import ma.emsi.minicrm.dao.entities.Interaction;
-import ma.emsi.minicrm.dao.entities.Lead;
-import ma.emsi.minicrm.dao.entities.FileMetadata;
-import ma.emsi.minicrm.dao.entities.Statut;
+import ma.emsi.minicrm.dao.entities.*;
 import ma.emsi.minicrm.services.InteractionService;
 import ma.emsi.minicrm.services.LeadService;
 import ma.emsi.minicrm.services.FileService;
@@ -55,7 +52,7 @@ public class LeadRestController {
     public ResponseEntity<Lead> createLead(@RequestBody Lead lead) {
         lead.setStatut(Statut.NOUVEAU);
         Lead createdLead = leadService.createLead(lead);
-        return ResponseEntity.ok(createdLead);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdLead);
     }
 
     // Assign a lead to a commercial (PUT /api/v1/leads/assignCommercial)
@@ -63,8 +60,12 @@ public class LeadRestController {
     public ResponseEntity<Void> assignCommercial(
             @RequestParam Integer leadId,
             @RequestParam Integer commercialId) {
-        leadService.assignCommercial(leadId, commercialId);
-        return ResponseEntity.ok().build();
+        try {
+            leadService.assignCommercial(leadId, commercialId);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // Update an existing lead (PUT /api/v1/leads/{id})
@@ -80,8 +81,12 @@ public class LeadRestController {
     // Delete a lead by its ID (DELETE /api/v1/leads/{id})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLead(@PathVariable Integer id) {
-        leadService.deleteLead(id);
-        return ResponseEntity.ok().build();
+        boolean deleted = leadService.deleteLead(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Delete multiple leads by their IDs (POST /api/v1/leads/deleteSelected)
@@ -89,7 +94,7 @@ public class LeadRestController {
     public ResponseEntity<Void> deleteSelectedLeads(@RequestBody List<Integer> leadIds) {
         try {
             leadService.deleteLeads(leadIds);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -112,6 +117,8 @@ public class LeadRestController {
         List<FileMetadata> files = fileService.getFilesByLeadId(leadId);
         return ResponseEntity.ok(files);
     }
+
+    // Get all interactions for a specific lead (GET /api/v1/leads/{leadId}/interactions)
     @GetMapping("/{leadId}/interactions")
     public ResponseEntity<List<Interaction>> getInteractionsByLeadId(@PathVariable Integer leadId) {
         List<Interaction> interactions = interactionService.getInteractionsByLeadId(leadId);
@@ -120,7 +127,6 @@ public class LeadRestController {
         }
         return ResponseEntity.ok(interactions);
     }
-
 
     // Create an interaction for a lead (POST /api/v1/leads/{leadId}/interactions)
     @PostMapping("/{leadId}/interactions")
@@ -134,6 +140,12 @@ public class LeadRestController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/leads/" + leadId + "/interactions/" + savedInteraction.getId());
         return new ResponseEntity<>(savedInteraction, headers, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<LeadHistory>> getLeadHistory(@PathVariable Integer id) {
+        List<LeadHistory> history = leadService.getLeadHistory(id);
+        return ResponseEntity.ok(history);
     }
 
 }
