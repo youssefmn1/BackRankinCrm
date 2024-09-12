@@ -6,7 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RendezVousRepository extends JpaRepository<RendezVous, Integer> {
     Page<RendezVous> findByLieuContains(String kw, PageRequest of);
+
+    List<RendezVous> findByCommercialId(Integer commercialId);
 }

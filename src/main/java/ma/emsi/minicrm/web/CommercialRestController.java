@@ -2,9 +2,11 @@ package ma.emsi.minicrm.web;
 
 import ma.emsi.minicrm.dao.entities.Commercial;
 import ma.emsi.minicrm.dao.entities.Lead;
+import ma.emsi.minicrm.dao.entities.RendezVous;
 import ma.emsi.minicrm.dao.entities.Role;
 import ma.emsi.minicrm.services.CommercialService;
 import ma.emsi.minicrm.services.LeadService;
+import ma.emsi.minicrm.services.RendezVousService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ public class CommercialRestController {
 
     @Autowired
     private LeadService leadService;
+
+    @Autowired
+    private RendezVousService rendezVousService;
 
     // Create a new commercial
     @PostMapping
@@ -80,6 +85,20 @@ public class CommercialRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{id}/rendezvous")
+    public ResponseEntity<List<RendezVous>> getRendezVousByCommercialId(@PathVariable Integer id) {
+        System.out.println("Fetching rendezvous for commercial ID: " + id);
+        Commercial commercial = commercialService.getCommercialById(id);
+        if (commercial != null) {
+            List<RendezVous> rendezvous = rendezVousService.getRendezVousByCommercialId(id);
+            System.out.println("Found " + rendezvous.size() + " rendezvous");
+            return new ResponseEntity<>(rendezvous, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
     // Delete selected commercials

@@ -61,4 +61,8 @@ public class RendezVousService {
     }
 }
 
+    public List<RendezVous> getRendezVousByCommercialId(Integer commercialId) {
+        return rendezVousRepository.findByCommercialId(commercialId);
+    }
+
 }
