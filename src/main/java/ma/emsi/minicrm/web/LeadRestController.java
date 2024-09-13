@@ -56,17 +56,14 @@ public class LeadRestController {
     }
 
     // Assign a lead to a commercial (PUT /api/v1/leads/assignCommercial)
-    @PutMapping("/assignCommercial")
+    @PutMapping("/{leadId}/assign-commercial/{commercialId}")
     public ResponseEntity<Void> assignCommercial(
-            @RequestParam Integer leadId,
-            @RequestParam Integer commercialId) {
-        try {
-            leadService.assignCommercial(leadId, commercialId);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+            @PathVariable Integer leadId,
+            @PathVariable Integer commercialId) {
+        leadService.assignCommercial(leadId, commercialId);
+        return ResponseEntity.ok().build();
     }
+
 
     // Update an existing lead (PUT /api/v1/leads/{id})
     @PutMapping("/{id}")
