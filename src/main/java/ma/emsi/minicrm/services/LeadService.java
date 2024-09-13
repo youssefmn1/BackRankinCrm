@@ -121,7 +121,6 @@ public class LeadService {
                 lead.getCommercial().getLeads().remove(lead);
             }
             leadRepository.delete(lead);
-            recordHistory(lead, "DELETE"); // Enregistrez l'historique avec le type "DELETE"
             return true;
         } else {
             return false;
