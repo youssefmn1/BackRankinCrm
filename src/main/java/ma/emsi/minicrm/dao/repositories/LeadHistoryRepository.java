@@ -12,5 +12,8 @@ public interface LeadHistoryRepository extends JpaRepository<LeadHistory, Intege
 
     List<LeadHistory> findByLeadId(Integer leadId);
 
+    void deleteByLeadId(Integer leadId);
+
+
     List<LeadHistory> findByModificationDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

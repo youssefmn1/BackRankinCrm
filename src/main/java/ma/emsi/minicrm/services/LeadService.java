@@ -113,21 +113,31 @@ public class LeadService {
     }
 
 
-
+    @Transactional
     public boolean deleteLead(Integer id) {
-        Lead lead = getLeadById(id);
-        if (lead != null) {
-            if (lead.getCommercial() != null) {
-                lead.getCommercial().getLeads().remove(lead);
+        try {
+            // Récupérer le Lead
+            Lead lead = getLeadById(id);
+            if (lead != null) {
+                // Supprimer les historiques associés
+                leadHistoryRepository.deleteByLeadId(id);
+
+                // Supprimer le lead
+                if (lead.getCommercial() != null) {
+                    lead.getCommercial().getLeads().remove(lead);
+                }
+                leadRepository.delete(lead);
+                return true;
+            } else {
+                return false;
             }
-            leadRepository.delete(lead);
-            return true;
-        } else {
+        } catch (Exception e) {
+            // Log de l'exception
+            System.err.println("Error while deleting lead: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
-
-
     public List<Lead> findAll() {
         return leadRepository.findAll();
     }
