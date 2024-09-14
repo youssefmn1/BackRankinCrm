@@ -65,4 +65,7 @@ public class RendezVousService {
         return rendezVousRepository.findByCommercialId(commercialId);
     }
 
+    public List<RendezVous> getRendezVousByLeadId(Integer leadId) {
+        return rendezVousRepository.findByLeadId(leadId);
+    }
 }

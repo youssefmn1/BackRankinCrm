@@ -13,4 +13,6 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, Integer>
     Page<RendezVous> findByLieuContains(String kw, PageRequest of);
 
     List<RendezVous> findByCommercialId(Integer commercialId);
+
+    List<RendezVous> findByLeadId(Integer leadId);
 }

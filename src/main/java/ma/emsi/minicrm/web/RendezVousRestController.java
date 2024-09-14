@@ -125,6 +125,16 @@ public class RendezVousRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    // Get rendez-vous by lead ID
+    @GetMapping("/lead/{leadId}")
+    public ResponseEntity<RendezVous> getRendezVousByLeadId(@PathVariable Integer leadId) {
+        List<RendezVous> rendezVousList = rendezVousService.getRendezVousByLeadId(leadId);
+        if (rendezVousList.isEmpty()) {
+            return ResponseEntity.ok(null); // No rendez-vous found
+        }
+        return ResponseEntity.ok(rendezVousList.get(0)); // Return first rendez-vous
+    }
+
 
 
 
