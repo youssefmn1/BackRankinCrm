@@ -2,11 +2,14 @@ package ma.emsi.minicrm.services;
 
 import jakarta.transaction.Transactional;
 import ma.emsi.minicrm.dao.entities.Commercial;
+import ma.emsi.minicrm.dao.entities.FileMetadata;
 import ma.emsi.minicrm.dao.entities.Lead;
 import ma.emsi.minicrm.dao.entities.LeadHistory;
 import ma.emsi.minicrm.dao.repositories.CommercialRepository;
 import ma.emsi.minicrm.dao.repositories.LeadHistoryRepository;
 import ma.emsi.minicrm.dao.repositories.LeadRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +24,8 @@ import java.util.Optional;
 @Service
 public class LeadService {
 
+    private static final Logger log = LoggerFactory.getLogger(LeadService.class);
+
     @Autowired
     private LeadRepository leadRepository;
 
@@ -29,6 +34,9 @@ public class LeadService {
 
     @Autowired
     private LeadHistoryRepository leadHistoryRepository;
+
+    @Autowired
+    private FileService fileService;
 
     public Page<Lead> findPaginated(@RequestParam(name = "page",defaultValue = "0") int page,
                                     @RequestParam(name = "size",defaultValue = "5") int size,
@@ -60,6 +68,30 @@ public class LeadService {
         leadHistoryRepository.save(leadHistory);
     }
 
+    @Transactional
+    public boolean deleteLead(Integer id) {
+        try {
+            // Récupérer le Lead
+            Lead lead = getLeadById(id);
+            if (lead != null) {
+                // Supprimer les historiques associés
+                leadHistoryRepository.deleteByLeadId(id);
+
+                // Supprimer le lead
+                if (lead.getCommercial() != null) {
+                    lead.getCommercial().getLeads().remove(lead);
+                }
+                leadRepository.delete(lead);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            // Log de l'exception
+            log.error("Error while deleting lead: " + e.getMessage(), e);
+            return false;
+        }
+    }
 
     public void assignCommercial(Integer leadId, Integer commercialId) {
         Lead lead = leadRepository.findById(leadId).orElseThrow(() -> new IllegalArgumentException("Invalid lead Id:" + leadId));
@@ -67,7 +99,6 @@ public class LeadService {
         lead.setCommercial(commercial);
         leadRepository.save(lead);
     }
-
 
     public Lead getLeadById(Integer id) {
         Optional<Lead> optionalLead = leadRepository.findById(id);
@@ -112,32 +143,6 @@ public class LeadService {
         return updatedLead;
     }
 
-
-    @Transactional
-    public boolean deleteLead(Integer id) {
-        try {
-            // Récupérer le Lead
-            Lead lead = getLeadById(id);
-            if (lead != null) {
-                // Supprimer les historiques associés
-                leadHistoryRepository.deleteByLeadId(id);
-
-                // Supprimer le lead
-                if (lead.getCommercial() != null) {
-                    lead.getCommercial().getLeads().remove(lead);
-                }
-                leadRepository.delete(lead);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            // Log de l'exception
-            System.err.println("Error while deleting lead: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
     public List<Lead> findAll() {
         return leadRepository.findAll();
     }
@@ -153,6 +158,7 @@ public class LeadService {
     public List<Lead> getLeadsByCommercialId(Integer commercialId) {
         return leadRepository.findByCommercialId(commercialId);
     }
+
     public LeadService(LeadRepository leadRepository) {
         this.leadRepository = leadRepository;
     }
@@ -160,14 +166,15 @@ public class LeadService {
     public void deleteLeads(List<Integer> leadIds) {
         leadRepository.deleteAllByIdIn(leadIds);
     }
+
     //pour RDV
     public Lead getLeadId(Integer id) {
         return leadRepository.findById(id).orElse(null);
     }
+
     public List<LeadHistory> getLeadHistory(Integer leadId) {
         return leadHistoryRepository.findByLeadId(leadId);
     }
-
 
     public boolean existsById(Integer id) {
         return leadRepository.existsById(id);

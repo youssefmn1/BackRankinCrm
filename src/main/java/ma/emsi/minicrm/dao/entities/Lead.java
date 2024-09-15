@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -41,7 +42,7 @@ public class Lead {
     @JsonIgnoreProperties({"lead","commercial","files", "otherFields"})
     private RendezVous rendezVous;
 
-    @OneToMany(mappedBy = "lead")
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"lead","commercial","commercial", "otherFields"})
-    private List<FileMetadata> files;
+    private List<FileMetadata> files = new ArrayList<>();
 }

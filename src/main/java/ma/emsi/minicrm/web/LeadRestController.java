@@ -6,12 +6,16 @@ import ma.emsi.minicrm.services.LeadService;
 import ma.emsi.minicrm.services.FileService;
 import ma.emsi.minicrm.services.CommercialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -30,14 +34,12 @@ public class LeadRestController {
     @Autowired
     private InteractionService interactionService;
 
-    // Get all leads (GET /api/v1/leads)
     @GetMapping
     public ResponseEntity<List<Lead>> getAllLeads() {
         List<Lead> leads = leadService.getAllLeads();
         return ResponseEntity.ok(leads);
     }
 
-    // Get a lead by its ID (GET /api/v1/leads/{id})
     @GetMapping("/{id}")
     public ResponseEntity<Lead> getLeadById(@PathVariable Integer id) {
         Lead lead = leadService.getLeadById(id);
@@ -47,7 +49,6 @@ public class LeadRestController {
         return ResponseEntity.ok(lead);
     }
 
-    // Create a new lead (POST /api/v1/leads)
     @PostMapping
     public ResponseEntity<Lead> createLead(@RequestBody Lead lead) {
         lead.setStatut(Statut.NOUVEAU);
@@ -55,7 +56,6 @@ public class LeadRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdLead);
     }
 
-    // Assign a lead to a commercial (PUT /api/v1/leads/assignCommercial)
     @PutMapping("/{leadId}/assign-commercial/{commercialId}")
     public ResponseEntity<Void> assignCommercial(
             @PathVariable Integer leadId,
@@ -64,8 +64,6 @@ public class LeadRestController {
         return ResponseEntity.ok().build();
     }
 
-
-    // Update an existing lead (PUT /api/v1/leads/{id})
     @PutMapping("/{id}")
     public ResponseEntity<Lead> updateLead(@PathVariable Integer id, @RequestBody Lead lead) {
         if (!id.equals(lead.getId())) {
@@ -75,7 +73,6 @@ public class LeadRestController {
         return ResponseEntity.ok(updatedLead);
     }
 
-    // Delete a lead by its ID (DELETE /api/v1/leads/{id})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLead(@PathVariable Integer id) {
         boolean deleted = leadService.deleteLead(id);
@@ -86,7 +83,6 @@ public class LeadRestController {
         }
     }
 
-    // Delete multiple leads by their IDs (POST /api/v1/leads/deleteSelected)
     @PostMapping("/deleteSelected")
     public ResponseEntity<Void> deleteSelectedLeads(@RequestBody List<Integer> leadIds) {
         try {
@@ -97,7 +93,6 @@ public class LeadRestController {
         }
     }
 
-    // Upload a file and attach it to a lead (POST /api/v1/leads/{leadId}/files/upload)
     @PostMapping("/{leadId}/files/upload")
     public ResponseEntity<FileMetadata> uploadFile(@PathVariable Integer leadId, @RequestParam("file") MultipartFile file) {
         try {
@@ -108,14 +103,31 @@ public class LeadRestController {
         }
     }
 
-    // Get all files attached to a specific lead (GET /api/v1/leads/{leadId}/files)
+    @GetMapping("/files/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+        try {
+            FileMetadata fileMetadata = fileService.getFileById(fileId);
+            Path filePath = Paths.get(fileMetadata.getFilePath());
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileMetadata.getFileName() + "\"")
+                        .body(resource);
+            } else {
+                throw new RuntimeException("Could not read the file!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("/{leadId}/files")
     public ResponseEntity<List<FileMetadata>> getFilesByLeadId(@PathVariable Integer leadId) {
         List<FileMetadata> files = fileService.getFilesByLeadId(leadId);
         return ResponseEntity.ok(files);
     }
 
-    // Get all interactions for a specific lead (GET /api/v1/leads/{leadId}/interactions)
     @GetMapping("/{leadId}/interactions")
     public ResponseEntity<List<Interaction>> getInteractionsByLeadId(@PathVariable Integer leadId) {
         List<Interaction> interactions = interactionService.getInteractionsByLeadId(leadId);
@@ -125,7 +137,6 @@ public class LeadRestController {
         return ResponseEntity.ok(interactions);
     }
 
-    // Create an interaction for a lead (POST /api/v1/leads/{leadId}/interactions)
     @PostMapping("/{leadId}/interactions")
     public ResponseEntity<Interaction> createInteractionForLead(@PathVariable Integer leadId, @RequestBody Interaction interaction) {
         Lead lead = leadService.getLeadById(leadId);
@@ -145,4 +156,13 @@ public class LeadRestController {
         return ResponseEntity.ok(history);
     }
 
+    @DeleteMapping("/{leadId}/files/{fileId}")
+    public ResponseEntity<Void> deleteFile(@PathVariable Integer leadId, @PathVariable Long fileId) {
+        try {
+            fileService.deleteFile(fileId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
